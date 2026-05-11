@@ -68,9 +68,10 @@
       endif
     %}
     <div
-      class="account-button header-actions__action{% if display_style == 'text' %} account-button--text{% endif %} color-{{ settings.popover_color_scheme }}"
+      class="account-button header-actions__action{% if display_style == 'text' %} account-button--text{% endif %}"
     >
       <shopify-account
+        class="color-{{ settings.popover_color_scheme }}"
         menu="{{ customer_account_menu }}"
         {% if account_actions_style != blank %}
           style="{{ account_actions_style }}"
@@ -627,6 +628,10 @@ padding-bottom: .125rem;
 
     position: relative;
     overflow: visible;
+  }
+
+  .header-actions__cart-icon svg {
+    filter: var(--cart-icon-filter, none);
   }
 
   .header-actions__cart-icon .cart-bubble {

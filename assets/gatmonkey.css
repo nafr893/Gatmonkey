@@ -73,3 +73,43 @@ input.search-input::placeholder,
 .search-page-input::placeholder {
   color: #888888 !important;
 }
+
+.cart-bubble {
+  --cart-padding: 0.2em;
+
+  position: relative;
+  width: 20px;
+  aspect-ratio: 1;
+  border-radius: 0;
+  border-width: 0;
+  display: flex;
+  line-height: normal;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary-button-text);
+  padding-inline: var(--cart-padding);
+}
+
+.cart-bubble[data-maintain-ratio] {
+  aspect-ratio: 1;
+}
+
+.cart-bubble[data-maintain-ratio] .cart-bubble__background {
+  border-radius: 0;
+}
+
+.cart-bubble__background {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-primary-button-background);
+  border-radius: 0;
+}
+
+.cart-bubble__text {
+  font-size: var(--font-size--3xs);
+  z-index: var(--layer-flat);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

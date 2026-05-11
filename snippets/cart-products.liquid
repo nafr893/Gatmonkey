@@ -38,20 +38,89 @@
   {% endif %}
 >
   {% if cart.empty? or force_empty %}
-    {%- if shop.customer_accounts_enabled and customer == null -%}
-      <p>
-        {{ 'actions.log_in_html' | t: link: routes.account_login_url }}
-      </p>
-    {%- endif -%}
+    <div class="cart-empty">
+      {%- liquid
+        assign btn_1_text = settings.empty_cart_btn_1_text
+        assign btn_1_url  = settings.empty_cart_btn_1_url  | default: routes.all_products_collection_url
+        assign btn_2_text = settings.empty_cart_btn_2_text
+        assign btn_2_url  = settings.empty_cart_btn_2_url  | default: routes.all_products_collection_url
+        assign btn_3_text = settings.empty_cart_btn_3_text
+        assign btn_3_url  = settings.empty_cart_btn_3_url  | default: routes.all_products_collection_url
+        assign btn_4_text = settings.empty_cart_btn_4_text
+        assign btn_4_url  = settings.empty_cart_btn_4_url  | default: routes.all_products_collection_url
+        assign has_any_button = false
+        if btn_1_text != blank or btn_2_text != blank or btn_3_text != blank or btn_4_text != blank
+          assign has_any_button = true
+        endif
+      -%}
 
-    <a
-      class="button cart-items__empty-button"
-      href="{{ settings.empty_cart_button_link | default: routes.all_products_collection_url }}"
-    >
-      <span class="button-text">
-        {{ 'actions.continue_shopping' | t }}
-      </span>
-    </a>
+      {%- if has_any_button -%}
+        <div class="cart-empty__buttons">
+          {%- if btn_1_text != blank -%}
+            <a class="button cart-empty__button" href="{{ btn_1_url }}">
+              <span class="button-text">{{ btn_1_text }}</span>
+            </a>
+          {%- endif -%}
+          {%- if btn_2_text != blank -%}
+            <a class="button cart-empty__button" href="{{ btn_2_url }}">
+              <span class="button-text">{{ btn_2_text }}</span>
+            </a>
+          {%- endif -%}
+          {%- if btn_3_text != blank -%}
+            <a class="button cart-empty__button" href="{{ btn_3_url }}">
+              <span class="button-text">{{ btn_3_text }}</span>
+            </a>
+          {%- endif -%}
+          {%- if btn_4_text != blank -%}
+            <a class="button cart-empty__button" href="{{ btn_4_url }}">
+              <span class="button-text">{{ btn_4_text }}</span>
+            </a>
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        <a
+          class="button cart-items__empty-button"
+          href="{{ settings.empty_cart_button_link | default: routes.all_products_collection_url }}"
+        >
+          <span class="button-text">{{ 'actions.continue_shopping' | t }}</span>
+        </a>
+      {%- endif -%}
+
+      {%- assign trending = settings.empty_cart_trending_collection -%}
+      {%- if trending != blank and trending.products.size > 0 -%}
+        <div class="cart-empty__trending">
+          <p class="cart-empty__trending-title">Trending</p>
+          <ul class="cart-empty__trending-list list-unstyled" id="cart-trending-list">
+            {%- for product in trending.products limit: 8 -%}
+              <li class="cart-empty__trending-item">
+                {%- render 'resource-card',
+                  resource_type: 'product',
+                  resource: product,
+                  image_width: 300,
+                  image_aspect_ratio: '4 / 5',
+                  swatches_product: product,
+                  product_card_wrapper: true
+                -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+          <div class="cart-empty__carousel-footer">
+            <div class="cart-empty__scroll-track" aria-hidden="true">
+              <div class="cart-empty__scroll-thumb"></div>
+            </div>
+            <div class="cart-empty__carousel-nav">
+              <button class="cart-empty__nav-btn cart-empty__nav-btn--prev" aria-label="Previous" type="button">
+                {{- 'icon-chevron-left.svg' | inline_asset_content -}}
+              </button>
+              <span class="cart-empty__nav-counter"><span class="cart-empty__nav-current">1</span>/<span class="cart-empty__nav-total">1</span></span>
+              <button class="cart-empty__nav-btn cart-empty__nav-btn--next" aria-label="Next" type="button">
+                {{- 'icon-chevron-right.svg' | inline_asset_content -}}
+              </button>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
   {%- else -%}
     <span
       class="visually-hidden"
@@ -630,7 +699,7 @@
   }
 
   .cart-items__media-container {
-    display: flex;
+    display: flex; 
     aspect-ratio: var(--ratio);
     position: relative;
     width: 100%;
@@ -649,6 +718,137 @@
     margin-top: var(--margin-md);
     padding-inline: var(--padding-4xl);
     padding-block: var(--padding-lg);
+  }
+
+  /* Empty cart state */
+  .cart-drawer:not(:has(.cart-form)) .cart-items__wrapper:has(.cart-empty) {
+    align-items: stretch;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .cart-empty {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cart-empty__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-2xs);
+    padding-block: 0;
+    padding-inline: 0;
+    padding-bottom: var(--padding-3xl);
+    padding-top: var(--padding-md);
+  }
+
+  .cart-empty__button {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    font-size: var(--font-size--sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .cart-empty__trending {
+    padding-inline: 0;
+    padding-block-end: var(--padding-4xl);
+  }
+
+  .cart-empty__trending-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-block-start: 2rem;
+    margin-block-end: var(--margin-md);
+    
+  }
+
+  .cart-empty__trending-list {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    gap: var(--gap-md);
+    padding-block-end: var(--padding-xs);
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .cart-empty__trending-item {
+    flex: 0 0 calc(50% - var(--gap-md) / 2);
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+
+  .cart-empty__carousel-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-md);
+    margin-block-start: var(--margin-md);
+  }
+
+  .cart-empty__scroll-track {
+    position: relative;
+    flex: 1;
+    height: 2px;
+    background-color: rgb(var(--color-foreground-rgb) / 0.15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .cart-empty__scroll-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--color-foreground);
+    border-radius: 2px;
+    transition: left 0.15s ease, width 0.15s ease;
+  }
+
+  .cart-empty__carousel-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  .cart-empty__nav-counter {
+    font-size: var(--font-size--sm);
+    font-weight: 500;
+    min-width: 2.5rem;
+    text-align: center;
+    color: var(--color-foreground);
+    letter-spacing: 0.02em;
+  }
+
+  .cart-empty__nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--color-foreground);
+
+    svg {
+      width: 0.75rem;
+      height: 0.75rem;
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
   }
 
   /* Error message */
@@ -931,3 +1131,110 @@
     }
   }
 {% endstylesheet %}
+
+<script>
+  (function () {
+    function initTrendingCarousel() {
+      var list = document.getElementById('cart-trending-list');
+      if (!list) return;
+
+      var trending  = list.closest('.cart-empty__trending');
+      var track     = trending && trending.querySelector('.cart-empty__scroll-track');
+      var thumb     = trending && trending.querySelector('.cart-empty__scroll-thumb');
+      var prevBtn   = trending && trending.querySelector('.cart-empty__nav-btn--prev');
+      var nextBtn   = trending && trending.querySelector('.cart-empty__nav-btn--next');
+      var elCurrent = trending && trending.querySelector('.cart-empty__nav-current');
+      var elTotal   = trending && trending.querySelector('.cart-empty__nav-total');
+
+      /* How many cards fit in view at once */
+      function pageSize() {
+        var item = list.querySelector('.cart-empty__trending-item');
+        if (!item) return 1;
+        var gap = parseFloat(getComputedStyle(list).columnGap) || 0;
+        return Math.max(1, Math.round(list.clientWidth / (item.offsetWidth + gap)));
+      }
+
+      /* Total number of pages */
+      function totalPages() {
+        var items = list.querySelectorAll('.cart-empty__trending-item').length;
+        return Math.max(1, Math.ceil(items / pageSize()));
+      }
+
+      /* Current page (1-based) based on scroll position */
+      function currentPage() {
+        var scrollable = list.scrollWidth - list.clientWidth;
+        if (scrollable <= 0) return 1;
+        var ratio = list.scrollLeft / scrollable;
+        var pages = totalPages();
+        return Math.min(pages, Math.max(1, Math.round(ratio * (pages - 1)) + 1));
+      }
+
+      /* Scroll to a given page (1-based) */
+      function goToPage(page) {
+        var pages = totalPages();
+        page = Math.min(pages, Math.max(1, page));
+        var scrollable = list.scrollWidth - list.clientWidth;
+        var target = (page - 1) / Math.max(1, pages - 1) * scrollable;
+        list.scrollTo({ left: target, behavior: 'smooth' });
+      }
+
+      function update() {
+        var pages = totalPages();
+        var page  = currentPage();
+
+        /* Progress bar: thumb covers 1/pages of the track */
+        if (track && thumb) {
+          if (pages <= 1) {
+            track.closest('.cart-empty__carousel-footer').style.display = 'none';
+            return;
+          }
+          track.closest('.cart-empty__carousel-footer').style.display = '';
+          var widthPct = 100 / pages;
+          var leftPct  = (page - 1) * widthPct;
+          thumb.style.width = widthPct + '%';
+          thumb.style.left  = leftPct + '%';
+        }
+
+        /* Counter */
+        if (elCurrent) elCurrent.textContent = page;
+        if (elTotal)   elTotal.textContent   = pages;
+
+        /* Arrow states */
+        if (prevBtn) prevBtn.disabled = page <= 1;
+        if (nextBtn) nextBtn.disabled = page >= pages;
+      }
+
+      if (prevBtn) prevBtn.addEventListener('click', function () { goToPage(currentPage() - 1); });
+      if (nextBtn) nextBtn.addEventListener('click', function () { goToPage(currentPage() + 1); });
+
+      list.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update, { passive: true });
+
+      /* Re-measure whenever the list gains real dimensions (e.g. drawer becomes visible) */
+      if (typeof ResizeObserver !== 'undefined') {
+        var ro = new ResizeObserver(function () {
+          requestAnimationFrame(update);
+        });
+        ro.observe(list);
+      }
+
+      /* Also re-measure when the cart drawer dialog opens */
+      var drawer = list.closest('dialog-component');
+      if (drawer) {
+        drawer.addEventListener('dialog:open', function () {
+          requestAnimationFrame(function () { requestAnimationFrame(update); });
+        });
+      }
+
+      requestAnimationFrame(function () { requestAnimationFrame(update); });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTrendingCarousel);
+    } else {
+      initTrendingCarousel();
+    }
+
+    document.addEventListener('shopify:section:load', initTrendingCarousel);
+  })();
+</script>

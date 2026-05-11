@@ -56,7 +56,7 @@
   if block_settings.slideshow_controls_style != block_settings.slideshow_mobile_controls_style
     assign slideshow_controls_class = 'mobile:hidden'
 
-    if block_settings.slideshow_mobile_controls_style != 'hint'
+    if block_settings.slideshow_mobile_controls_style != 'hint' and block_settings.slideshow_mobile_controls_style != 'none'
       assign render_mobile_slideshow_controls = true
     endif
   endif
@@ -445,16 +445,65 @@
     %}
 
     {% if media_presentation == 'grid' %}
+      {%- liquid
+        assign skre_vfiles = selected_product.selected_or_first_available_variant.metafields.custom.variant_images.value
+        if skre_vfiles != blank
+          assign skre_grid_count = skre_vfiles.size | plus: sorted_media.size
+        else
+          assign skre_grid_count = sorted_media.size
+        endif
+      -%}
       <ul
-        class="media-gallery__grid list-unstyled"
+        class="media-gallery__grid list-unstyled{% if skre_grid_count > 8 %} media-gallery__grid--collapsed{% endif %}"
         data-testid="media-gallery-grid"
       >
+        {%- if skre_vfiles != blank -%}
+          {%- for vfile in skre_vfiles -%}
+            {%- liquid
+              if vfile.image != blank
+                assign skre_vf_img = vfile.image
+                assign skre_vf_type = 'image'
+              elsif vfile.preview_image != blank
+                assign skre_vf_img = vfile.preview_image
+                assign skre_vf_type = 'video'
+              else
+                continue
+              endif
+              assign skre_vf_ratio = skre_vf_img.aspect_ratio | default: 1.0
+              if needs_both_sizes and forloop.first
+                assign skre_vf_sizes = sizes_single
+              else
+                assign skre_vf_sizes = sizes
+              endif
+            -%}
+            <li
+              class="{{ product_media_container_class }} product-media-container--{{ skre_vf_type }}{% unless block_settings.aspect_ratio == 'adapt' %} product-media-container--force-aspect{% endunless %}"
+              style="{% if block_settings.aspect_ratio == 'adapt' %}--media-preview-ratio: {{ skre_vf_ratio }};{% endif %} --media-radius: {{ block_settings.media_radius }}px;"
+              {% if settings.transition_to_main_product and forloop.first %}
+                data-view-transition-type="product-image-transition"
+              {% endif %}
+            >
+              <div class="product-media" style="--ratio: {{ skre_vf_ratio }}">
+                {{-
+                  skre_vf_img
+                  | image_url: width: 3840
+                  | image_tag:
+                    widths: '240, 352, 832, 1200, 1600, 1920, 2560, 3840',
+                    alt: vfile.alt | default: skre_vf_img.alt,
+                    sizes: skre_vf_sizes,
+                    loading: 'lazy',
+                    class: 'product-media__image'
+                -}}
+              </div>
+            </li>
+          {%- endfor -%}
+        {%- endif -%}
         {% for media in sorted_media %}
           <li
             ref="media[]"
             class="{{ product_media_container_class }} product-media-container--{{ media.media_type }} {% unless block_settings.aspect_ratio == 'adapt' %}product-media-container--force-aspect{% endunless %}"
             style="{% if block_settings.aspect_ratio == 'adapt' %} --media-preview-ratio: {{ media.preview_image.aspect_ratio | default: 1.0 }};{% endif %} --media-radius: {{ block_settings.media_radius }}px;"
-            {% if settings.transition_to_main_product and forloop.first %}
+            {% if settings.transition_to_main_product and forloop.first and skre_vfiles == blank %}
               data-view-transition-type="product-image-transition"
             {% endif %}
             {% if media.presentation.focal_point != blank %}
@@ -474,7 +523,7 @@
               </button>
             {%- endif -%}
             {%- liquid
-              if needs_both_sizes and forloop.first
+              if needs_both_sizes and forloop.first and skre_vfiles == blank
                 assign media_sizes = sizes_single
               else
                 assign media_sizes = sizes
@@ -490,6 +539,24 @@
           </li>
         {% endfor %}
       </ul>
+      {% if skre_grid_count > 8 %}
+        <button class="skre-gallery-toggle" type="button">
+          <span class="skre-gallery-toggle__caret" aria-hidden="true">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+          <span class="skre-gallery-toggle__label">Show More</span>
+        </button>
+        <script>
+          (function () {
+            var btn = document.currentScript.previousElementSibling;
+            var grid = btn.previousElementSibling;
+            var label = btn.querySelector('.skre-gallery-toggle__label');
+            btn.addEventListener('click', function () {
+              var collapsed = grid.classList.toggle('media-gallery__grid--collapsed');
+              label.textContent = collapsed ? 'Show More' : 'Show Less';
+              btn.classList.toggle('skre-gallery-toggle--open', !collapsed);
+            });
+          })();
+        </script>
+      {% endif %}
     {% endif %}
 
     {%- if block_settings.zoom -%}
@@ -635,8 +702,199 @@
         window.ProductModel.loadShopifyXR();
       </script>
     {%- endif -%}
+
+    {%- liquid
+      assign _has_multi = false
+      if sorted_media.size > 1
+        assign _has_multi = true
+        assign _pmg_pct = 100.0 | divided_by: sorted_media.size | round
+      endif
+      assign _has_sim = false
+      if selected_product != blank
+        assign _has_sim = true
+      endif
+    -%}
+    {%- if _has_multi or _has_sim -%}
+      <div class="skre-pmg-mob" id="skre-pmg-mob-{{ block_id }}" data-total="{{ sorted_media.size }}" aria-hidden="true">
+        <div class="skre-pmg-mob__row">
+          {%- if _has_multi -%}
+            <div class="skre-pmg-mob__ctr">
+              <span class="skre-pmg-mob__cur">1</span><span class="skre-pmg-mob__sep">/</span><span>{{ sorted_media.size }}</span>
+            </div>
+          {%- else -%}
+            <span></span>
+          {%- endif -%}
+          {%- if _has_sim -%}
+            <button class="skre-pmg-mob__sim-btn" type="button"
+              data-product-id="{{ selected_product.id }}"
+              aria-controls="skre-sim-{{ block_id }}">
+              Similar Products {{- 'icon-similar.svg' | inline_asset_content -}}
+            </button>
+          {%- endif -%}
+        </div>
+        {%- if _has_multi -%}
+          <div class="skre-pmg-mob__track">
+            <div class="skre-pmg-mob__fill" style="width:{{ _pmg_pct }}%"></div>
+          </div>
+        {%- endif -%}
+      </div>
+      <script>
+      (function(){
+        var bid = '{{ block_id }}';
+
+        /* All helpers re-query the DOM so they work after media-gallery.replaceWith() */
+        function getMob()   { return document.getElementById('skre-pmg-mob-' + bid); }
+        {%- if _has_sim -%}
+        function getSheet() { return document.getElementById('skre-sim-' + bid); }
+        {%- endif -%}
+
+        function injectMob() {
+          var mob = getMob();
+          if (!mob) return;
+          var mg = mob.closest('media-gallery');
+          if (!mg) return;
+          var sc = mg.querySelector('slideshow-container');
+          if (sc && !sc.contains(mob)) sc.appendChild(mob);
+          /* First slide of any variant = white frosted glass */
+          mob.classList.add('skre-pmg-mob--light');
+        }
+
+        /* Initial injection */
+        injectMob();
+
+        /* Guard: document-level listeners are registered once per block, not per render */
+        window.__skrPmg = window.__skrPmg || {};
+        if (window.__skrPmg[bid]) return;
+        window.__skrPmg[bid] = true;
+
+        /* Re-inject after variant:update replaces media-gallery.
+           media-gallery.js calls this.replaceWith() synchronously inside its
+           variant:update handler; by the time the event reaches document the
+           new element is already in the DOM. */
+        document.addEventListener('variant:update', function() {
+          injectMob();
+        });
+
+        /* Counter + light/dark badge on slide change */
+        document.addEventListener('slideshow:select', function(e) {
+          var mob = getMob();
+          if (!mob) return;
+          var mg = mob.closest('media-gallery');
+          /* Ignore events from a different gallery on the page */
+          if (!mg || !mg.contains(e.target)) return;
+
+          {%- if _has_multi -%}
+          var n     = e.detail.index + 1;
+          var total = parseInt(mob.dataset.total, 10) || 1;
+          var cur   = mob.querySelector('.skre-pmg-mob__cur');
+          var fill  = mob.querySelector('.skre-pmg-mob__fill');
+          if (cur)  cur.textContent  = n;
+          if (fill) fill.style.width = (n / total * 100) + '%';
+          {%- endif -%}
+          /* Slide 1 of any variant = white frosted glass; all others = dark */
+          mob.classList.toggle('skre-pmg-mob--light', e.detail.index === 0);
+        });
+
+        {%- if _has_sim -%}
+        var simLoaded = false;
+
+        function openSheet() {
+          var sheet = getSheet();
+          if (!sheet) return;
+          sheet.setAttribute('aria-hidden', 'false');
+          sheet.classList.add('skre-sim--visible');
+          if (!simLoaded) loadProducts(sheet);
+        }
+        function closeSheet() {
+          var sheet = getSheet();
+          if (!sheet) return;
+          sheet.setAttribute('aria-hidden', 'true');
+          sheet.classList.remove('skre-sim--visible');
+        }
+        function loadProducts(sheet) {
+          var mob = getMob();
+          var btn = mob && mob.querySelector('.skre-pmg-mob__sim-btn');
+          var pid = btn && btn.dataset.productId;
+          if (!pid || !sheet) return;
+          var body = sheet.querySelector('.skre-sim__body');
+          var base = '/recommendations/products.json?product_id=' + pid + '&limit=10';
+          fetch(base + '&intent=related')
+            .then(function(r){ return r.json(); })
+            .then(function(data){
+              if (!data.products || !data.products.length) {
+                return fetch(base + '&intent=complementary').then(function(r){ return r.json(); });
+              }
+              return data;
+            })
+            .then(function(data){
+              simLoaded = true;
+              var prods = data.products || [];
+              if (!prods.length) {
+                body.innerHTML = '<p class="skre-sim__empty">No similar products found.</p>';
+                return;
+              }
+              body.innerHTML = prods.map(function(p){
+                var imgSrc = (typeof p.featured_image === 'string' && p.featured_image)
+                           || (Array.isArray(p.images) && p.images[0]) || '';
+                var imgTag = imgSrc ? '<img class="skre-sim-card__img" src="' + imgSrc + '" alt="" loading="lazy">' : '';
+                var price = '$' + (p.price_min / 100).toFixed(2).replace(/\.00$/, '');
+                return '<a class="skre-sim-card" href="' + p.url + '">'
+                  + '<div class="skre-sim-card__media">' + imgTag + '</div>'
+                  + '<p class="skre-sim-card__title">' + p.title + '</p>'
+                  + '<p class="skre-sim-card__price">' + price + '</p>'
+                  + '</a>';
+              }).join('');
+            })
+            .catch(function(){
+              body.innerHTML = '<p class="skre-sim__empty">Could not load recommendations.</p>';
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+          /* Open: click on Similar Products button in this block's mob */
+          var btn = e.target.closest('.skre-pmg-mob__sim-btn');
+          if (btn) {
+            var mob = getMob();
+            if (mob && mob.contains(btn)) { openSheet(); return; }
+          }
+          /* Close: X button or backdrop */
+          var sheet = getSheet();
+          if (!sheet || !sheet.classList.contains('skre-sim--visible')) return;
+          if (e.target.closest('.skre-sim__close') && sheet.contains(e.target)) {
+            closeSheet(); return;
+          }
+          if (e.target.closest('.skre-sim__backdrop') && sheet.contains(e.target)) {
+            closeSheet();
+          }
+        });
+
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+            var sheet = getSheet();
+            if (sheet && sheet.classList.contains('skre-sim--visible')) closeSheet();
+          }
+        });
+        {%- endif -%}
+      })();
+      </script>
+    {%- endif -%}
   </media-gallery>
 {% endif %}
+
+{%- if selected_product != blank -%}
+  <div class="skre-sim" id="skre-sim-{{ block_id }}" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="skre-sim__backdrop"></div>
+    <div class="skre-sim__panel">
+      <div class="skre-sim__header">
+        <span class="skre-sim__title">Similar Products</span>
+        <button class="skre-sim__close" type="button" aria-label="Close">
+          {{- 'icon-close.svg' | inline_asset_content -}}
+        </button>
+      </div>
+      <div class="skre-sim__body"></div>
+    </div>
+  </div>
+{%- endif -%}
 
 {% render 'product-media-gallery-content-styles' %}
 
@@ -1047,5 +1305,241 @@
 
   slideshow-slide.product-media-container--tallest {
     content-visibility: visible;
+  }
+
+  /* ── Mobile product gallery: counter + progress bar + Similar Products ── */
+  .skre-pmg-mob {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .skre-pmg-mob {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 3;
+      pointer-events: none;
+      gap: 6px;
+    }
+
+    .skre-pmg-mob__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0.875rem;
+    }
+
+    .skre-pmg-mob__ctr {
+      padding: 0.45rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: #fff;
+      line-height: 1;
+      background: rgb(0 0 0 / 0.25);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 0;
+    }
+
+    .skre-pmg-mob__sep {
+      opacity: 0.5;
+      margin-inline: 2px;
+    }
+
+    .skre-pmg-mob__sim-btn {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgb(0 0 0 / 0.25);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      color: #fff;
+      border: none;
+      border-radius: 0;
+      padding: 0.45rem 0.8rem;
+      margin: 0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: inherit;
+
+      svg {
+        width: 1rem;
+        height: 1rem;
+        fill: currentColor;
+        flex-shrink: 0;
+      }
+    }
+
+    .skre-pmg-mob__track {
+      width: 100%;
+      height: 2px;
+      background-color: rgb(var(--color-foreground-rgb) / 0.12);
+    }
+
+    .skre-pmg-mob__fill {
+      height: 100%;
+      background-color: #000;
+      transition: width 0.3s ease;
+    }
+
+    /* Light image: white frosted glass, black text/icon */
+    .skre-pmg-mob--light .skre-pmg-mob__ctr {
+      background: rgb(255 255 255 / 0.55);
+      color: #000;
+    }
+    .skre-pmg-mob--light .skre-pmg-mob__sim-btn {
+      background: rgb(255 255 255 / 0.55);
+      color: #000;
+    }
+    .skre-pmg-mob--light .skre-pmg-mob__sim-btn svg {
+      fill: #000;
+    }
+    .skre-pmg-mob--light .skre-pmg-mob__track {
+      background-color: rgb(0 0 0 / 0.12);
+    }
+    .skre-pmg-mob--light .skre-pmg-mob__fill {
+      background-color: #000;
+    }
+  }
+
+  /* ── Similar Products bottom sheet ── */
+  .skre-sim {
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+    display: flex;
+    align-items: flex-end;
+    pointer-events: none;
+  }
+
+  .skre-sim--visible {
+    pointer-events: auto;
+  }
+
+  .skre-sim__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .skre-sim--visible .skre-sim__backdrop {
+    opacity: 1;
+  }
+
+  .skre-sim__panel {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-height: 60dvh;
+    background-color: var(--color-background);
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+    will-change: transform;
+  }
+
+  .skre-sim--visible .skre-sim__panel {
+    transform: translateY(0);
+  }
+
+  .skre-sim__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1rem 0.875rem;
+    border-bottom: 1px solid #ededed;
+    flex-shrink: 0;
+  }
+
+  .skre-sim__title {
+    font-family: 'United-Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .skre-sim__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    color: var(--color-foreground);
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+
+  .skre-sim__body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    align-content: start;
+  }
+
+  .skre-sim__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+    padding-block: 2rem;
+    margin: 0;
+    font-size: var(--font-size--sm);
+  }
+
+  .skre-sim-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .skre-sim-card__media {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--style-border-radius-cards, 4px);
+    background: rgb(var(--color-foreground-rgb) / 0.05);
+  }
+
+  .skre-sim-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .skre-sim-card__title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .skre-sim-card__price {
+    font-size: 0.875rem;
+    color: rgb(var(--color-foreground-rgb) / 0.65);
+    margin: 0;
   }
 {% endstylesheet %}

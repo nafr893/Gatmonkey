@@ -1,0 +1,182 @@
+
+{% liquid
+  assign s = block.settings
+  assign has_products = false
+  if s.product_1 or s.product_2 or s.product_3 or s.product_4
+    assign has_products = true
+  endif
+%}
+
+{% if has_products %}
+  <div
+    class="variant-option variant-option--dropdowns linked-product-option spacing-style"
+    style="{% render 'spacing-style', settings: s %}"
+    {{ block.shopify_attributes }}
+  >
+    <label for="linked-product-option-{{ block.id }}">
+      {{- s.option_label | default: 'Add-on' -}}
+    </label>
+    <div class="variant-option__select-wrapper">
+      <select
+        id="linked-product-option-{{ block.id }}"
+        class="variant-option__select"
+        data-linked-option
+      >
+        {%- if s.include_none -%}
+          <option value="">{{ s.none_label | default: 'None' }}</option>
+        {%- endif -%}
+
+        {%- for n in (1..4) -%}
+          {%- liquid
+            if n == 1
+              assign linked_prod  = s.product_1
+              assign linked_label = s.label_1
+            elsif n == 2
+              assign linked_prod  = s.product_2
+              assign linked_label = s.label_2
+            elsif n == 3
+              assign linked_prod  = s.product_3
+              assign linked_label = s.label_3
+            elsif n == 4
+              assign linked_prod  = s.product_4
+              assign linked_label = s.label_4
+            endif
+          -%}
+          {%- if linked_prod != blank -%}
+            {%- assign linked_variant = linked_prod.selected_or_first_available_variant -%}
+            <option
+              value="{{ linked_variant.id }}"
+              {%- unless linked_variant.available %} disabled{%- endunless -%}
+            >
+              {%- if linked_label != blank -%}
+                {{- linked_label -}}
+              {%- else -%}
+                {{- linked_prod.title -}}
+              {%- endif -%}
+              {%- unless linked_variant.available %} — {{ 'products.product.sold_out' | t }}{%- endunless -%}
+            </option>
+          {%- endif -%}
+        {%- endfor -%}
+      </select>
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="icon icon-caret"
+        viewBox="0 0 10 6"
+      >
+        {%- render 'icon', icon: 'caret' -%}
+      </svg>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Linked Product Option",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Adds a dropdown that bundles a separate product with the main product when added to cart. Inventory is tracked independently for each product."
+    },
+    {
+      "type": "text",
+      "id": "option_label",
+      "label": "Option name",
+      "default": "Add-on"
+    },
+    {
+      "type": "checkbox",
+      "id": "include_none",
+      "label": "Include \"None\" option",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "none_label",
+      "label": "\"None\" option label",
+      "default": "None"
+    },
+    {
+      "type": "header",
+      "content": "Option 1"
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "label_1",
+      "label": "Label (leave blank to use product title)"
+    },
+    {
+      "type": "header",
+      "content": "Option 2"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "label_2",
+      "label": "Label (leave blank to use product title)"
+    },
+    {
+      "type": "header",
+      "content": "Option 3"
+    },
+    {
+      "type": "product",
+      "id": "product_3",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "label_3",
+      "label": "Label (leave blank to use product title)"
+    },
+    {
+      "type": "header",
+      "content": "Option 4"
+    },
+    {
+      "type": "product",
+      "id": "product_4",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "label_4",
+      "label": "Label (leave blank to use product title)"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}

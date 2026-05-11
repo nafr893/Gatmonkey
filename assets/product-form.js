@@ -295,6 +295,23 @@ class ProductFormComponent extends Component {
       return;
     }
 
+    const section = this.closest('.shopify-section, dialog, product-card');
+    const linkedSelect = section?.querySelector('select[data-linked-option]');
+    const linkedVariantId = linkedSelect?.value;
+
+    if (linkedVariantId) {
+      const mainVariantId = this.#getIntendedVariantId();
+      const quantity = this.#getQuantity();
+      if (mainVariantId) {
+        this.refs.addToCartButtonContainer?.animateAddToCart?.();
+        this.#processBatchAddToCart([
+          { variantId: mainVariantId, quantity },
+          { variantId: linkedVariantId, quantity: 1 },
+        ]);
+        return;
+      }
+    }
+
     this.#processAddToCart(undefined, undefined, event);
   }
 

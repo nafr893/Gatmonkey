@@ -109,10 +109,31 @@
             <span class="menu-list__link-title">{{- link.title -}}</span>
           </a>
           {%- if link.links != blank -%}
+            {%- comment -%} Match promo slots to this nav item by case-sensitive identifier {%- endcomment -%}
+            {%- assign matched_slots = '' -%}
+            {%- if block_settings.show_mega_promo -%}
+              {%- assign link_title_stripped = link.title | strip -%}
+              {%- for slot in (1..5) -%}
+                {%- assign pk = 'mega_promo_' | append: slot -%}
+                {%- assign k_id = pk | append: '_identifier' -%}
+                {%- assign slot_id = block_settings[k_id] | strip -%}
+                {%- if slot_id != blank and slot_id == link_title_stripped -%}
+                  {%- if matched_slots != '' -%}{%- assign matched_slots = matched_slots | append: '|' -%}{%- endif -%}
+                  {%- assign matched_slots = matched_slots | append: slot -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+            {%- assign show_promo = false -%}
+            {%- assign matched_slots_arr = '' | split: '' -%}
+            {%- if matched_slots != blank -%}
+              {%- assign show_promo = true -%}
+              {%- assign matched_slots_arr = matched_slots | split: '|' -%}
+            {%- endif -%}
+
             <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
               <div
                 id="submenu-{{ forloop.index }}"
-                class="menu-list__submenu-inner"
+                class="menu-list__submenu-inner{% if show_promo %} menu-list__submenu-inner--has-promo{% endif %}"
                 style="{% render 'submenu-font-styles', settings: block_settings %}"
               >
                 {% assign list_id = 'MegaMenuList-' | append: forloop.index %}
@@ -125,7 +146,7 @@
                       parent_link: link,
                       id: list_id,
                       section: section,
-                      grid_columns_count: 6,
+                      grid_columns_count: 4,
                       grid_columns_count_tablet: 4,
                       grid_columns_count_collection_images: 8,
                       menu_content_type: menu_content_type,
@@ -134,6 +155,53 @@
                     %}
                   </div>
                 </div>
+
+                {%- if show_promo -%}
+                  <div class="mega-menu-promo">
+                    {%- for slot_str in matched_slots_arr -%}
+                      {%- assign s = slot_str | strip -%}
+                      {%- assign pk      = 'mega_promo_' | append: s -%}
+                      {%- assign k_img   = pk | append: '_image' -%}
+                      {%- assign k_para  = pk | append: '_paragraph' -%}
+                      {%- assign k_head  = pk | append: '_heading' -%}
+                      {%- assign k_lbl   = pk | append: '_btn_label' -%}
+                      {%- assign k_url   = pk | append: '_btn_link' -%}
+                      {%- assign c_img    = block_settings[k_img] -%}
+                      {%- assign c_para   = block_settings[k_para] -%}
+                      {%- assign c_head   = block_settings[k_head] -%}
+                      {%- assign c_lbl    = block_settings[k_lbl] -%}
+                      {%- assign c_url    = block_settings[k_url] -%}
+                      <div class="mega-menu-promo__card">
+                        {%- if c_img -%}
+                          <img
+                            src="{{ c_img | image_url: width: 600 }}"
+                            alt="{{ c_img.alt | escape }}"
+                            class="mega-menu-promo__image"
+                            loading="lazy"
+                            width="{{ c_img.width }}"
+                            height="{{ c_img.height }}"
+                          >
+                        {%- else -%}
+                          <div class="mega-menu-promo__placeholder"></div>
+                        {%- endif -%}
+                        <div class="mega-menu-promo__overlay" aria-hidden="true"></div>
+                        <div class="mega-menu-promo__content">
+                          {%- if c_para != blank -%}
+                            <p class="mega-menu-promo__paragraph">{{ c_para }}</p>
+                          {%- endif -%}
+                          {%- if c_head != blank -%}
+                            <p class="mega-menu-promo__heading">{{ c_head }}</p>
+                          {%- endif -%}
+                          {%- if c_lbl != blank -%}
+                            <a href="{{ c_url | default: '#' }}" class="mega-menu-promo__btn">
+                              {{- c_lbl -}}
+                            </a>
+                          {%- endif -%}
+                        </div>
+                      </div>
+                    {%- endfor -%}
+                  </div>
+                {%- endif -%}
               </div>
             </div>
           {%- endif -%}
@@ -522,7 +590,7 @@
   .mega-menu__link--parent {
     font-family: var(--menu-parent-font-family);
     font-style: var(--menu-parent-font-style);
-    font-weight: var(--menu-parent-font-weight);
+    font-weight: 700;
     font-size: var(--menu-parent-font-size);
     line-height: var(--menu-parent-font-line-height);
     text-transform: var(--menu-parent-font-case);
@@ -684,6 +752,107 @@
   .mega-menu__submenu {
     /* preserves the inherited grid layout when this submenu wrapper is used */
     display: contents;
+  }
+
+  /* ── Mega menu promo card (desktop only) ─────────────────── */
+  .menu-list__submenu-inner--has-promo {
+    @media screen and (min-width: 990px) {
+      gap: var(--menu-horizontal-gap);
+    }
+  }
+
+  .menu-list__submenu-inner--has-promo > .mega-menu {
+    @media screen and (min-width: 990px) {
+      flex: 4 1 0;
+      min-width: 0;
+    }
+  }
+
+  .mega-menu-promo {
+    display: none;
+
+    @media screen and (min-width: 990px) {
+      display: flex;
+      flex-direction: column;
+      flex: 1.5 1 0;
+      min-width: 0;
+      margin-inline-end: var(--page-margin);
+      align-self: flex-start;
+    }
+  }
+
+  .mega-menu-promo__card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--style-border-radius-cards, 0);
+  }
+
+  .mega-menu-promo__placeholder {
+    position: absolute;
+    inset: 0;
+    background: rgb(var(--color-foreground-rgb) / 0.08);
+  }
+
+  .mega-menu-promo__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.45s ease;
+  }
+
+  .mega-menu-promo__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.47) 0%, rgba(0,0,0,0.13) 55%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
+  }
+
+  .mega-menu-promo__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.1rem 1.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: #fff;
+  }
+
+  .mega-menu-promo__paragraph {
+    font-size: var(--font-size--sm);
+    color: rgba(255,255,255,0.75);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .mega-menu-promo__heading {
+    font-family: var(--font-heading--family);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .mega-menu-promo__btn {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 7px 16px;
+    background-color: #fff;
+    color: #000;
+    font-size: var(--font-size--sm);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    align-self: flex-start;
+    border-radius: var(--style-border-radius-buttons, 0);
   }
 {% endstylesheet %}
 
@@ -912,7 +1081,212 @@
       "id": "drawer_dividers",
       "label": "t:settings.dividers",
       "default": false
-    }
+    },
+    {
+      "type": "header",
+      "content": "Promo Card"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_drawer_promo",
+      "label": "Show promo card",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "drawer_promo_image",
+      "label": "Image",
+      "visible_if": "{{ block.settings.show_drawer_promo }}"
+    },
+    {
+      "type": "text",
+      "id": "drawer_promo_heading",
+      "label": "Heading",
+      "default": "Build and Save 15%",
+      "visible_if": "{{ block.settings.show_drawer_promo }}"
+    },
+    {
+      "type": "text",
+      "id": "drawer_promo_subheading",
+      "label": "Subheading",
+      "default": "on your layering system.",
+      "visible_if": "{{ block.settings.show_drawer_promo }}"
+    },
+    {
+      "type": "text",
+      "id": "drawer_promo_button_text",
+      "label": "Button text",
+      "default": "START HERE",
+      "visible_if": "{{ block.settings.show_drawer_promo }}"
+    },
+    {
+      "type": "url",
+      "id": "drawer_promo_button_link",
+      "label": "Button link",
+      "visible_if": "{{ block.settings.show_drawer_promo }}"
+    },
+    {
+      "type": "header",
+      "content": "Utility Links"
+    },
+    {
+      "type": "image_picker",
+      "id": "drawer_utility_icon_1",
+      "label": "Icon 1"
+    },
+    {
+      "type": "text",
+      "id": "drawer_utility_text_1",
+      "label": "Text 1",
+      "default": "Rewards"
+    },
+    {
+      "type": "url",
+      "id": "drawer_utility_link_1",
+      "label": "Link 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "drawer_utility_icon_2",
+      "label": "Icon 2"
+    },
+    {
+      "type": "text",
+      "id": "drawer_utility_text_2",
+      "label": "Text 2",
+      "default": "Login / Sign Up"
+    },
+    {
+      "type": "url",
+      "id": "drawer_utility_link_2",
+      "label": "Link 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "drawer_utility_icon_3",
+      "label": "Icon 3"
+    },
+    {
+      "type": "text",
+      "id": "drawer_utility_text_3",
+      "label": "Text 3",
+      "default": "Customer Care"
+    },
+    {
+      "type": "url",
+      "id": "drawer_utility_link_3",
+      "label": "Link 3"
+    },
+    {
+      "type": "header",
+      "content": "Social Icons"
+    },
+    {
+      "type": "url",
+      "id": "drawer_social_instagram",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "drawer_social_facebook",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "drawer_social_youtube",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "url",
+      "id": "drawer_social_tiktok",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "drawer_social_twitter",
+      "label": "Twitter / X URL"
+    },
+    {
+      "type": "header",
+      "content": "Sub-drawer Hero Cards"
+    },
+    {
+      "type": "image_picker",
+      "id": "drawer_sub_hero_1_image",
+      "label": "Hero 1 - Image"
+    },
+    {
+      "type": "text",
+      "id": "drawer_sub_hero_1_text",
+      "label": "Hero 1 - Label",
+      "default": "Shop Bundles"
+    },
+    {
+      "type": "url",
+      "id": "drawer_sub_hero_1_link",
+      "label": "Hero 1 - Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "drawer_sub_hero_2_image",
+      "label": "Hero 2 - Image"
+    },
+    {
+      "type": "text",
+      "id": "drawer_sub_hero_2_text",
+      "label": "Hero 2 - Label",
+      "default": "Shop by Hunt"
+    },
+    {
+      "type": "url",
+      "id": "drawer_sub_hero_2_link",
+      "label": "Hero 2 - Link"
+    },
+    {
+      "type": "header",
+      "content": "Mega Menu Promo Card (Desktop)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mega_promo",
+      "label": "Enable promo cards",
+      "default": false
+    },
+    { "type": "header", "content": "Promo Card 1" },
+    { "type": "text", "id": "mega_promo_1_identifier", "label": "Menu identifier (case-sensitive)", "placeholder": "e.g. Shop", "visible_if": "{{ block.settings.show_mega_promo }}" },
+    { "type": "image_picker", "id": "mega_promo_1_image", "label": "Image", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_1_identifier != blank }}" },
+    { "type": "inline_richtext", "id": "mega_promo_1_paragraph", "label": "Paragraph text", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_1_identifier != blank }}" },
+    { "type": "text", "id": "mega_promo_1_heading", "label": "Heading", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_1_identifier != blank }}" },
+    { "type": "text", "id": "mega_promo_1_btn_label", "label": "Button label", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_1_identifier != blank }}" },
+    { "type": "url", "id": "mega_promo_1_btn_link", "label": "Button link", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_1_identifier != blank }}" },
+    { "type": "header", "content": "Promo Card 2" },
+    { "type": "text", "id": "mega_promo_2_identifier", "label": "Menu identifier (case-sensitive)", "placeholder": "e.g. Outlet", "visible_if": "{{ block.settings.show_mega_promo }}" },
+    { "type": "image_picker", "id": "mega_promo_2_image", "label": "Image", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_2_identifier != blank }}" },
+    { "type": "inline_richtext", "id": "mega_promo_2_paragraph", "label": "Paragraph text", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_2_identifier != blank }}" },
+    { "type": "text", "id": "mega_promo_2_heading", "label": "Heading", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_2_identifier != blank }}" },
+    { "type": "text", "id": "mega_promo_2_btn_label", "label": "Button label", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_2_identifier != blank }}" },
+    { "type": "url", "id": "mega_promo_2_btn_link", "label": "Button link", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_2_identifier != blank }}" },
+    { "type": "header", "content": "Promo Card 3" },
+    { "type": "text", "id": "mega_promo_3_identifier", "label": "Menu identifier (case-sensitive)", "placeholder": "e.g. Pursuit", "visible_if": "{{ block.settings.show_mega_promo }}" },
+    { "type": "image_picker", "id": "mega_promo_3_image", "label": "Image", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_3_identifier != blank }}" },
+    { "type": "inline_richtext", "id": "mega_promo_3_paragraph", "label": "Paragraph text", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_3_identifier != blank }}" },
+    { "type": "text", "id": "mega_promo_3_heading", "label": "Heading", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_3_identifier != blank }}" },
+    { "type": "text", "id": "mega_promo_3_btn_label", "label": "Button label", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_3_identifier != blank }}" },
+    { "type": "url", "id": "mega_promo_3_btn_link", "label": "Button link", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_3_identifier != blank }}" },
+    { "type": "header", "content": "Promo Card 4" },
+    { "type": "text", "id": "mega_promo_4_identifier", "label": "Menu identifier (case-sensitive)", "placeholder": "e.g. Explore", "visible_if": "{{ block.settings.show_mega_promo }}" },
+    { "type": "image_picker", "id": "mega_promo_4_image", "label": "Image", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_4_identifier != blank }}" },
+    { "type": "inline_richtext", "id": "mega_promo_4_paragraph", "label": "Paragraph text", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_4_identifier != blank }}" },
+    { "type": "text", "id": "mega_promo_4_heading", "label": "Heading", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_4_identifier != blank }}" },
+    { "type": "text", "id": "mega_promo_4_btn_label", "label": "Button label", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_4_identifier != blank }}" },
+    { "type": "url", "id": "mega_promo_4_btn_link", "label": "Button link", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_4_identifier != blank }}" },
+    { "type": "header", "content": "Promo Card 5" },
+    { "type": "text", "id": "mega_promo_5_identifier", "label": "Menu identifier (case-sensitive)", "placeholder": "e.g. Womens", "visible_if": "{{ block.settings.show_mega_promo }}" },
+    { "type": "image_picker", "id": "mega_promo_5_image", "label": "Image", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_5_identifier != blank }}" },
+    { "type": "inline_richtext", "id": "mega_promo_5_paragraph", "label": "Paragraph text", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_5_identifier != blank }}" },
+    { "type": "text", "id": "mega_promo_5_heading", "label": "Heading", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_5_identifier != blank }}" },
+    { "type": "text", "id": "mega_promo_5_btn_label", "label": "Button label", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_5_identifier != blank }}" },
+    { "type": "url", "id": "mega_promo_5_btn_link", "label": "Button link", "visible_if": "{{ block.settings.show_mega_promo and block.settings.mega_promo_5_identifier != blank }}" }
   ]
 }
 {% endschema %}

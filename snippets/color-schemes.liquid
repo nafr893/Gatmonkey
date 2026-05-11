@@ -17,12 +17,14 @@
       {% assign opacity_35_55 = 0.55 %}
       {% assign opacity_40_60 = 0.60 %}
       {% assign opacity_30_60 = 0.60 %}
+      {% assign cart_icon_filter = 'brightness(0) invert(1)' %}
     {% else %}
       {% assign opacity_5_15 = 0.05 %}
       {% assign opacity_10_25 = 0.1 %}
       {% assign opacity_35_55 = 0.35 %}
       {% assign opacity_40_60 = 0.40 %}
       {% assign opacity_30_60 = 0.30 %}
+      {% assign cart_icon_filter = 'none' %}
     {% endif %}
     .color-{{ scheme.id }} {
         --color-background: rgb({{ scheme.settings.background.rgba }});
@@ -76,6 +78,7 @@
         --color-selected-variant-hover-text: rgb({{ scheme.settings.selected_variant_hover_text_color.rgba }});
         --color-selected-variant-hover-border: rgb({{ scheme.settings.selected_variant_hover_border_color.rgba }});
 
+        --cart-icon-filter: {{ cart_icon_filter }};
         --input-disabled-background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10));
         --input-disabled-border-color: rgb(var(--color-foreground-rgb) / var(--opacity-5-15));
         --input-disabled-text-color: rgb(var(--color-foreground-rgb) / var(--opacity-50));

@@ -66,38 +66,110 @@
             {%- liquid
               assign title = 'content.search_results_resource_products' | t
               assign products = predictive_search.resources.products
-              render 'predictive-search-products-list', title: title, products: products
+              render 'predictive-search-products-list', title: title, products: products, limit: 4
             -%}
           {% endif %}
 
-          {% if predictive_search.resources.collections.size > 0 %}
-            {% assign resource_title = 'content.search_results_resource_collections' | t %}
+          <div class="predictive-search-see-all-wrap">
+            <a
+              class="button button-secondary predictive-search-see-all"
+              href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}#products"
+            >
+              <span class="button-text">See All Results</span>
+            </a>
+          </div>
 
-            {% render 'predictive-search-resource-carousel',
-              title: resource_title,
-              resource_type: 'collection',
-              resources: predictive_search.resources.collections
-            %}
+          {% if predictive_search.resources.articles.size > 0 %}
+            <div class="predictive-search-secondary-section">
+              <hr class="predictive-search-secondary-section__divider">
+              <p class="predictive-search-secondary-section__heading">Blogs</p>
+              <ul class="predictive-search-secondary-section__list list-unstyled">
+                {%- for article in predictive_search.resources.articles limit: 3 -%}
+                  <li class="predictive-search-secondary-section__item" ref="resultsItems[]" on:keydown="/onSearchKeyDown">
+                    <a class="predictive-search-secondary-section__link" href="{{ article.url }}">
+                      {%- if article.image != blank -%}
+                        <div class="predictive-search-secondary-section__thumb">
+                          {{
+                            article.image
+                            | image_url: width: 80
+                            | image_tag: loading: 'lazy', class: 'predictive-search-secondary-section__thumb-img', widths: '80, 160'
+                          }}
+                        </div>
+                      {%- endif -%}
+                      <span class="predictive-search-secondary-section__title">
+                        {{- article.title -}}
+                      </span>
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+              <a
+                class="predictive-search-secondary-section__see-all"
+                href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}#blogs"
+              >
+                See all &rsaquo;
+              </a>
+            </div>
+          {% endif %}
+
+          {% if predictive_search.resources.collections.size > 0 %}
+            <div class="predictive-search-secondary-section">
+              <hr class="predictive-search-secondary-section__divider">
+              <p class="predictive-search-secondary-section__heading">Collections</p>
+              <ul class="predictive-search-secondary-section__list list-unstyled">
+                {%- for collection in predictive_search.resources.collections limit: 3 -%}
+                  <li class="predictive-search-secondary-section__item" ref="resultsItems[]" on:keydown="/onSearchKeyDown">
+                    <a class="predictive-search-secondary-section__link" href="{{ collection.url }}">
+                      {%- if collection.featured_image != blank -%}
+                        <div class="predictive-search-secondary-section__thumb">
+                          {{
+                            collection.featured_image
+                            | image_url: width: 80
+                            | image_tag: loading: 'lazy', class: 'predictive-search-secondary-section__thumb-img', widths: '80, 160'
+                          }}
+                        </div>
+                      {%- endif -%}
+                      <span class="predictive-search-secondary-section__title">
+                        {{- collection.title | truncate: 30 -}}
+                      </span>
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+              <a
+                class="predictive-search-secondary-section__see-all"
+                href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}#collections"
+              >
+                See all &rsaquo;
+              </a>
+            </div>
           {% endif %}
 
           {% if predictive_search.resources.pages.size > 0 %}
-            {% assign resource_title = 'content.search_results_resource_pages' | t %}
-
-            {% render 'predictive-search-resource-carousel',
-              title: resource_title,
-              resource_type: 'page',
-              resources: predictive_search.resources.pages
-            %}
-          {% endif %}
-
-          {% if predictive_search.resources.articles.size > 0 %}
-            {% assign resource_title = 'content.search_results_resource_articles' | t %}
-
-            {% render 'predictive-search-resource-carousel',
-              title: resource_title,
-              resource_type: 'article',
-              resources: predictive_search.resources.articles
-            %}
+            <div class="predictive-search-secondary-section">
+              <hr class="predictive-search-secondary-section__divider">
+              <p class="predictive-search-secondary-section__heading">Pages</p>
+              <ul class="predictive-search-secondary-section__list list-unstyled">
+                {%- for page in predictive_search.resources.pages limit: 3 -%}
+                  {%- assign _ph = page.handle | downcase -%}
+                  {%- assign _pt = page.title | downcase -%}
+                  {%- if _ph contains 'sitemap' or _ph contains 'html' or _pt contains 'sitemap' or _pt contains 'html' -%}{%- continue -%}{%- endif -%}
+                  <li class="predictive-search-secondary-section__item" ref="resultsItems[]" on:keydown="/onSearchKeyDown">
+                    <a class="predictive-search-secondary-section__link" href="{{ page.url }}">
+                      <span class="predictive-search-secondary-section__title">
+                        {{- page.title | truncate: 30 -}}
+                      </span>
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+              <a
+                class="predictive-search-secondary-section__see-all"
+                href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}#pages"
+              >
+                See all &rsaquo;
+              </a>
+            </div>
           {% endif %}
         {%- elsif predictive_search.resources.queries.size == 0 -%}
           <p class="predictive-search-results__no-results">

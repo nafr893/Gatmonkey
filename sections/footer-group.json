@@ -109,6 +109,18 @@
           },
           "blocks": {}
         },
+        "divider_XMJGYU": {
+          "type": "_divider",
+          "name": "t:names.divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
         "menu_XXfAdG": {
           "type": "menu",
           "name": "t:names.menu",
@@ -175,6 +187,7 @@
       "block_order": [
         "group_H6VpwJ",
         "email_signup_crihX7",
+        "divider_XMJGYU",
         "menu_XXfAdG",
         "menu_rcg3iJ",
         "social_links_mJf9zq"

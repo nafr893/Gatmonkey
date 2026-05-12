@@ -16,7 +16,7 @@
           "type": "text",
           "name": "t:names.heading",
           "settings": {
-            "text": "<p>SIGNATURE RIFLE SLINGS</p>",
+            "text": "<h1>SIGNATURE RIFLE SLINGS</h1>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",

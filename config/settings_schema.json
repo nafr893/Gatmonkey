@@ -1728,6 +1728,24 @@
       },
       {
         "type": "header",
+        "content": "t:content.free_shipping_bar"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_free_shipping_bar",
+        "label": "t:settings.enable_free_shipping_bar",
+        "default": false
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "t:settings.free_shipping_threshold",
+        "info": "t:info.free_shipping_threshold",
+        "default": 200,
+        "visible_if": "{{ settings.enable_free_shipping_bar == true }}"
+      },
+      {
+        "type": "header",
         "content": "t:content.cart_features"
       },
       {
@@ -1767,6 +1785,59 @@
         "id": "empty_cart_button_link",
         "label": "t:settings.empty_cart_button_link",
         "default": "/collections/all"
+      },
+      {
+        "type": "header",
+        "content": "Empty Cart Drawer"
+      },
+      {
+        "type": "text",
+        "id": "empty_cart_btn_1_text",
+        "label": "Button 1 - Text",
+        "default": "New Arrivals"
+      },
+      {
+        "type": "url",
+        "id": "empty_cart_btn_1_url",
+        "label": "Button 1 - Link"
+      },
+      {
+        "type": "text",
+        "id": "empty_cart_btn_2_text",
+        "label": "Button 2 - Text",
+        "default": "Best Sellers"
+      },
+      {
+        "type": "url",
+        "id": "empty_cart_btn_2_url",
+        "label": "Button 2 - Link"
+      },
+      {
+        "type": "text",
+        "id": "empty_cart_btn_3_text",
+        "label": "Button 3 - Text",
+        "default": "On Sale"
+      },
+      {
+        "type": "url",
+        "id": "empty_cart_btn_3_url",
+        "label": "Button 3 - Link"
+      },
+      {
+        "type": "text",
+        "id": "empty_cart_btn_4_text",
+        "label": "Button 4 - Text",
+        "default": "Shop Bundles"
+      },
+      {
+        "type": "url",
+        "id": "empty_cart_btn_4_url",
+        "label": "Button 4 - Link"
+      },
+      {
+        "type": "collection",
+        "id": "empty_cart_trending_collection",
+        "label": "Trending Products Collection"
       },
       {
         "type": "header",

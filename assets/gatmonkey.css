@@ -209,10 +209,6 @@ h5, h6, p {
   }
 }
 
-/* Thin divider under the header bar */
-.header {
-  border-bottom: 1px solid #ededed;
-}
 
 /* Product page: force all media items to square crop */
 .product-information__media .product-media {

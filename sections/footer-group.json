@@ -210,32 +210,77 @@
             "menu_NWN9q6"
           ]
         },
-        "social_links_mJf9zq": {
-          "type": "social-links",
-          "name": "t:names.social_media_links",
+        "group_xJ4jid": {
+          "type": "group",
+          "name": "t:names.group",
           "settings": {
-            "facebook_url": "https://www.facebook.com/gatmonkey2.0/",
-            "instagram_url": "https://www.instagram.com/gatmonkey/",
-            "youtube_url": "https://www.youtube.com/channel/UCDleu8_PngOTd_AhpbJJKqw",
-            "tiktok_url": "",
-            "twitter_url": "",
-            "threads_url": "",
-            "linkedin_url": "",
-            "bluesky_url": "",
-            "snapchat_url": "",
-            "pinterest_url": "",
-            "tumblr_url": "",
-            "vimeo_url": "",
-            "custom_url": ""
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
-          "blocks": {}
+          "blocks": {
+            "social_links_ET3RhQ": {
+              "type": "social-links",
+              "name": "t:names.social_media_links",
+              "settings": {
+                "facebook_url": "https://www.facebook.com/gatmonkey2.0/",
+                "instagram_url": "https://www.instagram.com/gatmonkey/",
+                "youtube_url": "https://www.youtube.com/channel/UCDleu8_PngOTd_AhpbJJKqw",
+                "tiktok_url": "",
+                "twitter_url": "",
+                "threads_url": "",
+                "linkedin_url": "",
+                "bluesky_url": "",
+                "snapchat_url": "",
+                "pinterest_url": "",
+                "tumblr_url": "",
+                "vimeo_url": "",
+                "custom_url": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "social_links_ET3RhQ"
+          ]
         }
       },
       "block_order": [
         "group_H6VpwJ",
         "email_signup_crihX7",
         "group_jxbmxc",
-        "social_links_mJf9zq"
+        "group_xJ4jid"
       ],
       "name": "t:names.footer",
       "settings": {

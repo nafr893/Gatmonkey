@@ -7,8 +7,6 @@ h1, h2, h3, h4 {
 font-family: 'Abel Pro', sans-serif !important;
 }
 
-
-
 h5, h6, p {
     font-family: 'avenir', sans-serif;
 }
@@ -18,6 +16,7 @@ h5, h6, p {
     font-size: 1.125rem !important;
   }
 }
+
 
 /* Swatches in predictive search product cards */
 .predictive-search-swatches {

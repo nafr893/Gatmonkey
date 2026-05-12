@@ -322,7 +322,7 @@
               "name": "t:names.collection_card_image",
               "static": true,
               "settings": {
-                "image_ratio": "adapt",
+                "image_ratio": "square",
                 "toggle_overlay": false,
                 "overlay_color": "#00000026",
                 "overlay_style": "solid",
@@ -347,7 +347,6 @@
       "settings": {
         "collection_list": [
           "best-sellers",
-          "big-luau-slings",
           "camo-rifle-slings",
           "signature-slings",
           "new-arrivals",
@@ -358,7 +357,7 @@
         "carousel_on_mobile": false,
         "columns": 3,
         "mobile_columns": "2",
-        "mobile_card_size": "60cqw",
+        "mobile_card_size": "44cqw",
         "columns_gap": 8,
         "bento_gap": 8,
         "rows_gap": 8,

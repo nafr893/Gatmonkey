@@ -1062,7 +1062,7 @@
           "settings": {
             "text": "<p>Our commitment doesn’t end after your purchase. We stand behind each of our products for life. </p>",
             "width": "fit-content",
-            "max_width": "narrow",
+            "max_width": "normal",
             "alignment": "left",
             "type_preset": "paragraph",
             "font": "var(--font-body--family)",

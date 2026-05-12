@@ -1728,19 +1728,19 @@
       },
       {
         "type": "header",
-        "content": "t:content.free_shipping_bar"
+        "content": "Free Shipping Bar"
       },
       {
         "type": "checkbox",
         "id": "enable_free_shipping_bar",
-        "label": "t:settings.enable_free_shipping_bar",
+        "label": "Enable free shipping bar",
         "default": false
       },
       {
         "type": "number",
         "id": "free_shipping_threshold",
-        "label": "t:settings.free_shipping_threshold",
-        "info": "t:info.free_shipping_threshold",
+        "label": "Free shipping threshold (dollars)",
+        "info": "Enter the order total in dollars that unlocks free shipping (e.g. 200 for $200).",
         "default": 200,
         "visible_if": "{{ settings.enable_free_shipping_bar == true }}"
       },

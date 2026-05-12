@@ -244,11 +244,11 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "text_Q4fxVC": {
+            "text_dQgGaR": {
               "type": "text",
-              "name": "t:names.text",
+              "name": "t:names.heading",
               "settings": {
-                "text": "<h3>Shop by collection</h3>",
+                "text": "<h3>SHOP BY CATEGORY</h3>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -264,7 +264,7 @@
                 "background_color": "#00000026",
                 "corner_radius": 0,
                 "padding-block-start": 0,
-                "padding-block-end": 16,
+                "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
@@ -272,7 +272,7 @@
             }
           },
           "block_order": [
-            "text_Q4fxVC"
+            "text_dQgGaR"
           ]
         },
         "static-collection-card": {

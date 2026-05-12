@@ -420,3 +420,24 @@ input.search-input::placeholder,
     transform: rotate(180deg);
   }
 }
+
+/* Mobile header icon dividers */
+@media screen and (max-width: 749px) {
+  header-drawer,
+  header-actions .account-button {
+    position: relative;
+  }
+
+  header-drawer::after,
+  header-actions .account-button::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 55%;
+    background-color: currentColor;
+    opacity: 0.35;
+  }
+}

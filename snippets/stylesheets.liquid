@@ -1,3 +1,12 @@
 {{ 'overflow-list.css' | asset_url | preload_tag: as: 'style' }}
 {{ 'base.css' | asset_url | stylesheet_tag: preload: true }}
 {{ 'gatmonkey.css' | asset_url | stylesheet_tag: preload: true }}
+<style>
+  @font-face {
+    font-family: 'Abel Pro';
+    src: url('{{ 'Abel-Pro-Bold.woff2' | asset_url }}') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>

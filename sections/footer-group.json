@@ -138,7 +138,7 @@
                       "type": "text",
                       "name": "t:names.heading",
                       "settings": {
-                        "text": "<h2>Get the latest intel.</h2>",
+                        "text": "<h3>Get the latest intel.</h3>",
                         "width": "fit-content",
                         "max_width": "none",
                         "alignment": "left",

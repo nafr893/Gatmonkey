@@ -214,9 +214,9 @@
           "type": "social-links",
           "name": "t:names.social_media_links",
           "settings": {
-            "facebook_url": "",
-            "instagram_url": "",
-            "youtube_url": "",
+            "facebook_url": "https://www.facebook.com/gatmonkey2.0/",
+            "instagram_url": "https://www.instagram.com/gatmonkey/",
+            "youtube_url": "https://www.youtube.com/channel/UCDleu8_PngOTd_AhpbJJKqw",
             "tiktok_url": "",
             "twitter_url": "",
             "threads_url": "",

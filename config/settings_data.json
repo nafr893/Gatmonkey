@@ -60,6 +60,7 @@
     "show_cart_note": false,
     "show_add_discount_code": true,
     "empty_cart_btn_1_text": "Best Sellers",
+    "empty_cart_btn_1_url": "shopify://collections/best-sellers",
     "empty_cart_btn_3_url": "shopify://collections/clearance",
     "drawer_drop_shadow": true,
     "icon_stroke": "default",

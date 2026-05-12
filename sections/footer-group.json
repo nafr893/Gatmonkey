@@ -366,11 +366,11 @@
                 "vertical_alignment": "center",
                 "align_baseline": false,
                 "horizontal_alignment_flex_direction_column": "flex-start",
-                "vertical_alignment_flex_direction_column": "center",
+                "vertical_alignment_flex_direction_column": "space-between",
                 "gap": 12,
-                "width": "fit-content",
+                "width": "fill",
                 "custom_width": 100,
-                "width_mobile": "fit-content",
+                "width_mobile": "fill",
                 "custom_width_mobile": 100,
                 "height": "fit",
                 "custom_height": 100,
@@ -396,16 +396,12 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "payment_icons_NwMb6T": {
-                  "type": "payment-icons",
-                  "name": "t:names.payment_icons",
+                "footer_policy_list_wUAmef": {
+                  "type": "footer-policy-list",
+                  "name": "t:names.policy_list",
                   "settings": {
-                    "horizontal_alignment": "flex-start",
-                    "gap": 10,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
+                    "font_size": "0.75rem",
+                    "case": "none"
                   },
                   "blocks": {}
                 },
@@ -431,7 +427,7 @@
                 }
               },
               "block_order": [
-                "payment_icons_NwMb6T",
+                "footer_policy_list_wUAmef",
                 "social_links_FhiMCB"
               ]
             }

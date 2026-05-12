@@ -235,7 +235,7 @@
                     "email_signup_acg8tK": {
                       "type": "email-signup",
                       "settings": {
-                        "width": "fill",
+                        "width": "custom",
                         "custom_width": 100,
                         "inherit_color_scheme": true,
                         "color_scheme": "",

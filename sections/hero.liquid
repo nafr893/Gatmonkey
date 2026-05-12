@@ -452,7 +452,7 @@
 
 <div
   id="Hero-{{ section.id }}"
-  class="hero color-{{ section.settings.color_scheme }}{% if section.blocks.size == 0 and section.settings.section_height == 'auto' %} hero--no-blocks-auto-height{% endif %}{% if section.settings.stack_media_on_mobile %} hero--stack-mobile{% endif %}"
+  class="hero color-{{ section.settings.color_scheme }}{% if section.blocks.size == 0 and section.settings.section_height == 'auto' %} hero--no-blocks-auto-height{% endif %}{% if section.settings.stack_media_on_mobile %} hero--stack-mobile{% endif %}{% if section.settings.visibility == 'desktop' %} hero--desktop-only{% elsif section.settings.visibility == 'mobile' %} hero--mobile-only{% endif %}"
   style="
     --hero-border-style: {{ section.settings.border }};
     --hero-border-width: {{ section.settings.border_width }}px;
@@ -722,6 +722,18 @@
     }
   }
 
+  @media screen and (max-width: 749px) {
+    .hero--desktop-only {
+      display: none;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .hero--mobile-only {
+      display: none;
+    }
+  }
+
   .hero__blurred-image img,
   .hero__blurred-image svg {
     position: absolute;
@@ -947,6 +959,26 @@
     {
       "type": "header",
       "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "label": "Show on",
+      "options": [
+        {
+          "value": "both",
+          "label": "Mobile and desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Mobile only"
+        },
+        {
+          "value": "desktop",
+          "label": "Desktop only"
+        }
+      ],
+      "default": "both"
     },
     {
       "type": "select",

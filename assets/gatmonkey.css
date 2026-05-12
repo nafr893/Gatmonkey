@@ -3,8 +3,17 @@ html:has(dialog:modal) {
   overflow: hidden;
 }
 
+@font-face {
+  font-family: 'Abel Pro';
+  src: url('{{ 'Abel-Pro-Bold.woff2' | asset_url }}') format('woff2');
+  font-weight: 700;
+  font-style: bold;
+  font-display: swap;
+}
+
+
 h1, h2, h3, h4 {
-font-family: 'United-Sans', sans-serif !important;
+font-family: 'Abel Pro', sans-serif !important;
 }
 
 

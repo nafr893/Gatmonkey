@@ -323,9 +323,9 @@
               "static": true,
               "settings": {
                 "image_ratio": "square",
-                "toggle_overlay": false,
+                "toggle_overlay": true,
                 "overlay_color": "#00000026",
-                "overlay_style": "solid",
+                "overlay_style": "gradient",
                 "gradient_direction": "to top",
                 "border": "none",
                 "border_width": 1,

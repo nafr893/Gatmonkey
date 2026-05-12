@@ -12,6 +12,7 @@
     "logo": "shopify://shop_images/logoforwebsite_1634511498__80330.original-2.webp",
     "logo_height": 50,
     "logo_height_mobile": 40,
+    "favicon": "shopify://shop_images/Gatmonkey_Favicon.png",
     "type_body_font": "inter_n5",
     "type_subheading_font": "inter_n7",
     "type_heading_font": "inter_n9",

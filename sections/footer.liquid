@@ -1,5 +1,19 @@
 
 
+{% if section.settings.visibility == 'desktop' %}
+  <style>
+    @media screen and (max-width: 749px) {
+      #shopify-section-{{ section.id }} { display: none; }
+    }
+  </style>
+{% elsif section.settings.visibility == 'mobile' %}
+  <style>
+    @media screen and (min-width: 750px) {
+      #shopify-section-{{ section.id }} { display: none; }
+    }
+  </style>
+{% endif %}
+
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div
   class="section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }}"
@@ -143,6 +157,26 @@
     "groups": ["footer"]
   },
   "settings": [
+    {
+      "type": "select",
+      "id": "visibility",
+      "label": "Show on",
+      "options": [
+        {
+          "value": "both",
+          "label": "Mobile and desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Mobile only"
+        },
+        {
+          "value": "desktop",
+          "label": "Desktop only"
+        }
+      ],
+      "default": "both"
+    },
     {
       "type": "select",
       "id": "section_width",

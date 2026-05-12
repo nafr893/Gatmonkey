@@ -872,6 +872,7 @@
         "group_9FtTPV": {
           "type": "group",
           "name": "t:names.group",
+          "disabled": true,
           "settings": {
             "content_direction": "row",
             "vertical_on_mobile": false,
@@ -935,6 +936,7 @@
             "group_Rnk6Wf": {
               "type": "group",
               "name": "t:names.group",
+              "disabled": true,
               "settings": {
                 "content_direction": "column",
                 "vertical_on_mobile": true,
@@ -1033,7 +1035,7 @@
         "text_q6N9tL": {
           "type": "text",
           "settings": {
-            "text": "<h2>HAWAIIAN WAVE</h2>",
+            "text": "<h2>GUARANTEED FOR LIFE.</h2>",
             "width": "fit-content",
             "max_width": "narrow",
             "alignment": "left",
@@ -1057,9 +1059,8 @@
         },
         "text_f64BnN": {
           "type": "text",
-          "disabled": true,
           "settings": {
-            "text": "<p>Made with care and unconditionally loved by our customers.</p>",
+            "text": "<p>Our commitment doesn’t end after your purchase. We stand behind each of our products for life. </p>",
             "width": "fit-content",
             "max_width": "narrow",
             "alignment": "left",
@@ -1075,7 +1076,7 @@
             "background_color": "#00000026",
             "corner_radius": 0,
             "padding-block-start": 0,
-            "padding-block-end": 32,
+            "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
@@ -1106,7 +1107,7 @@
       "name": "t:names.hero",
       "settings": {
         "media_type_1": "image",
-        "image_1": "shopify://shop_images/DSC_0530__24622.webp",
+        "image_1": "shopify://shop_images/8e8a8469-2.webp",
         "media_type_2": "image",
         "stack_media_on_mobile": false,
         "custom_mobile_media": false,

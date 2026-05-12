@@ -4,7 +4,6 @@
   Remove the default "Search Results" section to avoid paginate conflicts.
 {% endcomment %}
 
-{%- render 'skre-search-synonyms' -%}
 {% paginate search.results by 100 %}
 
 {%- assign product_results  = search.results | where: 'object_type', 'product' -%}

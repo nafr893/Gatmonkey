@@ -131,12 +131,12 @@
                     "heading_preset": "h3",
                     "border_style": "all",
                     "border_width": 1,
-                    "border_radius": 100,
+                    "border_radius": 0,
                     "input_type_preset": "paragraph",
                     "style_class": "button",
                     "display_type": "text",
                     "label": "Sign up",
-                    "integrated_button": false,
+                    "integrated_button": true,
                     "button_type_preset": "paragraph",
                     "padding-block-start": 0,
                     "padding-block-end": 0,
@@ -165,7 +165,7 @@
         "visibility": "desktop",
         "section_width": "page-width",
         "gap": 20,
-        "color_scheme": "scheme-1",
+        "color_scheme": "scheme-2",
         "padding-block-start": 36,
         "padding-block-end": 36
       }

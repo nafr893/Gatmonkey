@@ -535,14 +535,15 @@
             "image_qjL4ii"
           ]
         },
-        "text_Yrx9aw": {
+        "text_XAqjqP": {
           "type": "text",
+          "name": "t:names.heading",
           "settings": {
             "text": "<h2>HAWAIIAN WAVE</h2>",
             "width": "fit-content",
-            "max_width": "narrow",
+            "max_width": "normal",
             "alignment": "left",
-            "type_preset": "h2",
+            "type_preset": "rte",
             "font": "var(--font-body--family)",
             "font_size": "1rem",
             "line_height": "normal",
@@ -604,7 +605,7 @@
       },
       "block_order": [
         "group_wJcMpm",
-        "text_Yrx9aw",
+        "text_XAqjqP",
         "text_aaz8La",
         "button_jbfbDR"
       ],
@@ -1072,12 +1073,13 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "text_jEFig3": {
+            "text_fcEqpd": {
               "type": "text",
+              "name": "t:names.heading",
               "settings": {
                 "text": "<h2>GUARANTEED FOR LIFE.</h2>",
                 "width": "fit-content",
-                "max_width": "narrow",
+                "max_width": "normal",
                 "alignment": "left",
                 "type_preset": "h2",
                 "font": "var(--font-body--family)",
@@ -1099,7 +1101,7 @@
             }
           },
           "block_order": [
-            "text_jEFig3"
+            "text_fcEqpd"
           ]
         },
         "text_f64BnN": {

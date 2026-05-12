@@ -68,10 +68,9 @@
       endif
     %}
     <div
-      class="account-button header-actions__action{% if display_style == 'text' %} account-button--text{% endif %}"
+      class="account-button header-actions__action{% if display_style == 'text' %} account-button--text{% endif %} color-{{ settings.popover_color_scheme }}"
     >
       <shopify-account
-        class="color-{{ settings.popover_color_scheme }}"
         menu="{{ customer_account_menu }}"
         {% if account_actions_style != blank %}
           style="{{ account_actions_style }}"
@@ -317,11 +316,6 @@
   .account-button {
     /* Remove the background color from the color scheme, we want to inherit the color of the header */
     background: transparent;
-  }
-
-  .account-button shopify-account {
-    background: transparent;
-    color: inherit;
   }
 
   .account-button__icon,
@@ -633,10 +627,6 @@ padding-bottom: .125rem;
 
     position: relative;
     overflow: visible;
-  }
-
-  .header-actions__cart-icon svg {
-    filter: var(--cart-icon-filter, none);
   }
 
   .header-actions__cart-icon .cart-bubble {

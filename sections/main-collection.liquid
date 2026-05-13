@@ -62,6 +62,54 @@
             {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
             {% # theme-check-enable %}
           </li>
+
+          {% if section.settings.show_collection_promos %}
+            {% assign promo_modulo = forloop.index | modulo: 7 %}
+            {% if promo_modulo == 0 %}
+              {% assign promo_slot = forloop.index | divided_by: 7 %}
+              {% if promo_slot > 3 %}
+                {% assign promo_slot = promo_slot | modulo: 3 %}
+                {% if promo_slot == 0 %}{% assign promo_slot = 3 %}{% endif %}
+              {% endif %}
+
+              {% assign promo_img_key = 'promo_' | append: promo_slot | append: '_image' %}
+              {% assign promo_head_key = 'promo_' | append: promo_slot | append: '_heading' %}
+              {% assign promo_text_key = 'promo_' | append: promo_slot | append: '_text' %}
+              {% assign promo_label_key = 'promo_' | append: promo_slot | append: '_btn_label' %}
+              {% assign promo_link_key = 'promo_' | append: promo_slot | append: '_btn_link' %}
+
+              {% assign promo_image = section.settings[promo_img_key] %}
+              {% assign promo_heading = section.settings[promo_head_key] %}
+              {% assign promo_text = section.settings[promo_text_key] %}
+              {% assign promo_btn_label = section.settings[promo_label_key] %}
+              {% assign promo_btn_link = section.settings[promo_link_key] %}
+
+              {% if promo_image != blank or promo_heading != blank %}
+                <li class="skre-collection-promo-item">
+                  <a class="skre-promo-card" href="{{ promo_btn_link | default: '#' }}">
+                    {% if promo_image %}
+                      <img
+                        src="{{ promo_image | image_url: width: 1200 }}"
+                        alt="{{ promo_image.alt | default: promo_heading | escape }}"
+                        class="skre-promo-card__img"
+                        loading="lazy"
+                        width="{{ promo_image.width }}"
+                        height="{{ promo_image.height }}"
+                      >
+                    {% else %}
+                      <div class="skre-promo-card__placeholder"></div>
+                    {% endif %}
+                    <div class="skre-promo-card__overlay"></div>
+                    <div class="skre-promo-card__content">
+                      {% if promo_text != blank %}<p class="skre-promo-card__label">{{ promo_text }}</p>{% endif %}
+                      {% if promo_heading != blank %}<h3 class="skre-promo-card__heading">{{ promo_heading }}</h3>{% endif %}
+                      {% if promo_btn_label != blank %}<span class="skre-promo-card__btn">{{ promo_btn_label }}</span>{% endif %}
+                    </div>
+                  </a>
+                </li>
+              {% endif %}
+            {% endif %}
+          {% endif %}
         {% endfor %}
       {% endcapture %}
 
@@ -252,6 +300,103 @@
       "step": 1,
       "unit": "px",
       "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Collection Promo Cards"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_promos",
+      "label": "Show promo cards",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Promo Card 1 — after product 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "promo_1_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "promo_1_text",
+      "label": "Subtext"
+    },
+    {
+      "type": "text",
+      "id": "promo_1_btn_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "promo_1_btn_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Promo Card 2 — after product 14"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "promo_2_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "promo_2_text",
+      "label": "Subtext"
+    },
+    {
+      "type": "text",
+      "id": "promo_2_btn_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "promo_2_btn_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Promo Card 3 — after product 21"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "promo_3_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "promo_3_text",
+      "label": "Subtext"
+    },
+    {
+      "type": "text",
+      "id": "promo_3_btn_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "promo_3_btn_link",
+      "label": "Button link"
     }
   ],
   "presets": []

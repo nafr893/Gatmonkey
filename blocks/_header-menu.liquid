@@ -157,7 +157,7 @@
                 </div>
 
                 {%- if show_promo -%}
-                  <div class="mega-menu-promo" style="--mega-promo-count: {{ matched_slots_arr.size }}">
+                  <div class="mega-menu-promo">
                     {%- for slot_str in matched_slots_arr -%}
                       {%- assign s = slot_str | strip -%}
                       {%- assign pk      = 'mega_promo_' | append: s -%}
@@ -775,7 +775,7 @@
       display: flex;
       flex-direction: row;
       gap: var(--menu-horizontal-gap);
-      flex: calc(1.5 * var(--mega-promo-count, 1)) 1 0;
+      flex: 1.5 1 0;
       min-width: 0;
       margin-inline-end: var(--page-margin);
       align-self: flex-start;

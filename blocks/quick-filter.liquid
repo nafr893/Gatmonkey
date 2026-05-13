@@ -1,0 +1,199 @@
+{%- doc -%}
+ Quick filter block for collection pages.
+ Renders filter buttons based on product metafield "custom.filter_group".
+ Hides itself if there are 0 or 1 unique filter groups.
+{%- enddoc -%}
+
+{% liquid
+  assign unique_filters = ''
+  assign product_filter_map = ''
+  assign filter_count = 0
+
+  for product in collection.products
+    assign filter_group = product.metafields.custom.filter_group | strip
+
+    if filter_group != blank
+      # Build product -> filter map entry
+      if product_filter_map != ''
+        assign product_filter_map = product_filter_map | append: ','
+      endif
+      assign map_entry = '"' | append: product.id | append: '":"' | append: filter_group | append: '"'
+      assign product_filter_map = product_filter_map | append: map_entry
+
+      # Track unique filters
+      assign filter_exists = false
+      assign filters_array = unique_filters | split: '|||'
+
+      for existing_filter in filters_array
+        if existing_filter == filter_group
+          assign filter_exists = true
+          break
+        endif
+      endfor
+
+      unless filter_exists
+        if unique_filters != ''
+          assign unique_filters = unique_filters | append: '|||'
+        endif
+        assign unique_filters = unique_filters | append: filter_group
+        assign filter_count = filter_count | plus: 1
+      endunless
+    endif
+  endfor
+
+  assign filters_array = unique_filters | split: '|||'
+%}
+
+{% if filter_count > 1 %}
+  <script src="{{ 'quick-filter.js' | asset_url }}" defer></script>
+
+  <div
+    class="quick-filter"
+    {{ block.shopify_attributes }}
+    style="--quick-filter-gap: {{ block.settings.button_gap }}px;"
+  >
+    <div class="quick-filter__buttons" role="tablist" aria-label="Quick filter">
+      <button
+        type="button"
+        class="quick-filter__button quick-filter__button--active"
+        data-filter="all"
+        aria-pressed="true"
+      >
+        {{- block.settings.all_button_label | default: 'All' -}}
+      </button>
+
+      {% for filter in filters_array %}
+        {%- assign count = 0 -%}
+        {%- for product in collection.products -%}
+          {%- assign fg = product.metafields.custom.filter_group | strip -%}
+          {%- if fg == filter -%}
+            {%- assign count = count | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+        <button
+          type="button"
+          class="quick-filter__button"
+          data-filter="{{ filter | escape }}"
+          aria-pressed="false"
+        >
+          {{- filter }} ({{ count -}})
+        </button>
+      {% endfor %}
+    </div>
+
+    <script type="application/json" id="quick-filter-map">
+      { {{ product_filter_map }} }
+    </script>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  /* Block wrapper: force full width regardless of parent align-items setting */
+  .quick-filter-block {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .quick-filter {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .quick-filter__buttons {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--quick-filter-gap, var(--gap-sm));
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* Match search modal: padding at both ends so first/last pill isn't flush */
+    padding-inline: 2px;
+    padding-block-end: 2px;
+    /* Prevent pills from ever making the row wider than the container */
+    min-width: 0;
+  }
+
+  .quick-filter__buttons::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Desktop: wrap instead of scroll */
+  @media screen and (min-width: 750px) {
+    .quick-filter__buttons {
+      flex-wrap: wrap;
+      overflow-x: visible;
+      padding-inline: 0;
+    }
+  }
+
+  /* Pills — match search modal chip style exactly */
+  .quick-filter__button {
+    --pills-pill-background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5-15));
+
+    appearance: none;
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    padding: 6px 12px;
+    border: none;
+    border-radius: var(--style-border-radius-pills);
+    background-color: var(--pills-pill-background-color);
+    color: var(--color-foreground);
+    font-family: inherit;
+    font-size: var(--font-size--sm);
+    font-weight: 500;
+    text-transform: capitalize;
+    letter-spacing: normal;
+    cursor: pointer;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    transition: background-color var(--animation-speed) var(--animation-easing);
+  }
+
+  .quick-filter__button:hover {
+    --pills-pill-background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
+  }
+
+  .quick-filter__button--active {
+    --pills-pill-background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
+    font-weight: 700;
+  }
+
+  /* Hide filtered products */
+  .product-grid__item.quick-filter-hidden {
+    display: none;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Quick Filter",
+  "tag": "div",
+  "class": "quick-filter-block",
+  "settings": [
+    {
+      "type": "text",
+      "id": "all_button_label",
+      "label": "\"All\" button label",
+      "default": "All"
+    },
+    {
+      "type": "range",
+      "id": "button_gap",
+      "label": "Button gap",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quick Filter"
+    }
+  ]
+}
+{% endschema %}

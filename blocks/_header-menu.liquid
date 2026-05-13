@@ -773,7 +773,8 @@
 
     @media screen and (min-width: 990px) {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      gap: var(--menu-horizontal-gap);
       flex: 1.5 1 0;
       min-width: 0;
       margin-inline-end: var(--page-margin);
@@ -783,7 +784,8 @@
 
   .mega-menu-promo__card {
     position: relative;
-    width: 100%;
+    flex: 1 1 0;
+    min-width: 0;
     aspect-ratio: 1;
     overflow: hidden;
     border-radius: var(--style-border-radius-cards, 0);

@@ -69,7 +69,7 @@
 
     syncLoadMore(filterValue, productFilterMap);
   }
-
+  
   /**
    * @param {string} filterValue
    * @param {Record<string,string>} productFilterMap
@@ -82,7 +82,7 @@
     const label = /** @type {HTMLElement|null} */ (lm.querySelector('.skre-lm__label'));
     const fillD = /** @type {HTMLElement|null} */ (lm.querySelector('.skre-lm__fill--desk'));
     const fillM = /** @type {HTMLElement|null} */ (lm.querySelector('.skre-lm__fill--mob'));
-
+ 
     if (filterValue === 'all') {
       lm.style.display = '';
       if (lm.dataset.savedLabel && label) label.innerHTML = lm.dataset.savedLabel;

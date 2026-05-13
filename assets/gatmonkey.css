@@ -422,3 +422,10 @@ input.search-input::placeholder,
   }
 }
 
+
+
+.menu-drawer__search-form {
+    input {
+        background: rgb(var(--color-foreground-rgb) / .06) !important; 
+    }
+}

@@ -86,6 +86,25 @@
           </span>
         </button>
       </div>
+
+      {%- if block_settings.show_drawer_search -%}
+        <div class="menu-drawer__search">
+          <form action="{{ routes.search_url }}" method="get" role="search" class="menu-drawer__search-form">
+            <span class="svg-wrapper menu-drawer__search-icon" aria-hidden="true">
+              {{- 'icon-search.svg' | inline_asset_content -}}
+            </span>
+            <input
+              type="search"
+              name="q"
+              class="menu-drawer__search-input"
+              placeholder="Search..."
+              aria-label="{{ 'content.search_input_label' | t }}"
+              autocomplete="off"
+            >
+          </form>
+        </div>
+      {%- endif -%}
+
       <nav
         class="menu-drawer__navigation"
         style="
@@ -488,29 +507,28 @@
       -%}
 
       {%- if has_promo -%}
-        <div class="menu-drawer__promo-card">
+        <a
+          href="{{ block_settings.drawer_promo_button_link | default: '#' }}"
+          class="menu-drawer__promo-card"
+        >
           {%- if block_settings.drawer_promo_image -%}
-            <div class="menu-drawer__promo-image">
-              {{- block_settings.drawer_promo_image | image_url: width: 200 | image_tag: loading: 'lazy', class: 'menu-drawer__promo-img' -}}
-            </div>
+            {{- block_settings.drawer_promo_image | image_url: width: 800 | image_tag: loading: 'lazy', class: 'menu-drawer__promo-img' -}}
+          {%- else -%}
+            <div class="menu-drawer__promo-placeholder"></div>
           {%- endif -%}
+          <div class="menu-drawer__promo-overlay" aria-hidden="true"></div>
           <div class="menu-drawer__promo-content">
+            {%- if block_settings.drawer_promo_subheading != blank -%}
+              <p class="menu-drawer__promo-paragraph">{{ block_settings.drawer_promo_subheading }}</p>
+            {%- endif -%}
             {%- if block_settings.drawer_promo_heading != blank -%}
               <p class="menu-drawer__promo-heading">{{ block_settings.drawer_promo_heading }}</p>
             {%- endif -%}
-            {%- if block_settings.drawer_promo_subheading != blank -%}
-              <p class="menu-drawer__promo-subheading">{{ block_settings.drawer_promo_subheading }}</p>
-            {%- endif -%}
             {%- if block_settings.drawer_promo_button_text != blank -%}
-              <a
-                href="{{ block_settings.drawer_promo_button_link | default: '#' }}"
-                class="button menu-drawer__promo-btn"
-              >
-                {{- block_settings.drawer_promo_button_text -}}
-              </a>
+              <span class="menu-drawer__promo-btn">{{ block_settings.drawer_promo_button_text }}</span>
             {%- endif -%}
           </div>
-        </div>
+        </a>
       {%- endif -%}
 
       {%- comment -%} ===== DRAWER EXTRAS: utility links, social icons ===== {%- endcomment -%}
@@ -1309,68 +1327,129 @@
     padding-block-end: var(--padding-xl);
   }
 
-  /* Promo Card */
-  .menu-drawer__promo-card {
-    display: flex;
-    gap: var(--gap-md, 1rem);
-    align-items: center;
-    padding: 0;
-    margin-block-start: 40px;
-    margin-inline: var(--padding-xl);
-    border: 1px solid var(--color-border);
-    background-color: #F5F5F5;
+  /* Search bar */
+  .menu-drawer__search {
+    padding: var(--padding-sm) var(--drawer-padding);
   }
 
-  .menu-drawer__promo-image {
-    flex: 0 0 auto;
-    width: 100px;
-    height: 100px;
+  .menu-drawer__search-form {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    background-color: rgb(var(--color-foreground-rgb) / 0.06);
+    border: 1px solid var(--color-border);
+    border-radius: var(--style-border-radius-inputs, 0);
+    padding-inline: var(--padding-md);
+    height: 44px;
+  }
+
+  .menu-drawer__search-icon svg {
+    width: var(--icon-size-xs);
+    height: var(--icon-size-xs);
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+
+  .menu-drawer__search-input {
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    color: var(--color-foreground);
+    font-size: var(--font-size--sm);
+    width: 100%;
+    padding: 0;
+    min-height: 0;
+  }
+
+  .menu-drawer__search-input::placeholder {
+    color: rgb(var(--color-foreground-rgb) / 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--font-size--xs);
+  }
+
+  /* Promo Card — full-width with image background */
+  .menu-drawer__promo-card {
+    position: relative;
+    display: block;
+    margin-inline: var(--drawer-padding);
+    margin-block-start: var(--padding-xl);
     overflow: hidden;
+    aspect-ratio: 16 / 9;
+    text-decoration: none;
+    border-radius: var(--style-border-radius-cards, 0);
+  }
+
+  .menu-drawer__promo-placeholder {
+    position: absolute;
+    inset: 0;
+    background: rgb(var(--color-foreground-rgb) / 0.08);
   }
 
   .menu-drawer__promo-img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .menu-drawer__promo-card:hover .menu-drawer__promo-img {
+    transform: scale(1.03);
+  }
+
+  .menu-drawer__promo-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 55%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
   }
 
   .menu-drawer__promo-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 1.25rem 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: var(--gap-sm, 0.5rem);
-    min-width: 0;
+    gap: 0.2rem;
+    color: #fff;
+  }
+
+  .menu-drawer__promo-paragraph {
+    font-size: var(--font-size--xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.85;
+    margin: 0;
   }
 
   .menu-drawer__promo-heading {
     margin: 0;
     font-weight: 800;
-    font-size: var(--font-size--sm, 0.9375rem);
-    line-height: 1.3;
-  }
-
-  .menu-drawer__promo-subheading {
-    margin: 0;
-    font-size: var(--font-size--sm, 0.9375rem);
-    font-weight: 700;
-    line-height: 1.3;
+    font-size: 1.3rem;
+    line-height: 1.15;
+    text-transform: uppercase;
+    color: #fff;
   }
 
   .menu-drawer__promo-btn {
     display: inline-block;
-    padding: var(--padding-xs) var(--padding-md);
+    margin-top: 0.6rem;
+    padding: 0.5rem 1.1rem;
+    background-color: var(--color-primary-button-background, #fff);
+    color: var(--color-primary-button-text, #000);
     font-size: var(--font-size--xs, 0.8125rem);
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    font-weight: 800;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    text-decoration: none;
-    background-color: var(--color-foreground);
-    color: var(--color-background);
-    width: fit-content;
-    border-radius: 0px;
-  }
-
-  .menu-drawer__promo-btn:hover {
-    opacity: 1;
+    align-self: flex-start;
+    border-radius: var(--style-border-radius-buttons, 0);
   }
 
   /* Icon Utility Links */

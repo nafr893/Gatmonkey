@@ -246,6 +246,11 @@ h5, h6, p {
   .mega-menu__grid {
     --menu-horizontal-gap: 4rem;
   }
+
+  /* Keep mega menu text links on a single line */
+  .mega-menu__link {
+    white-space: nowrap;
+  }
 }
 
 /* Scale review block (stars + count) to 75% */

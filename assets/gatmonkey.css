@@ -242,9 +242,9 @@ h5, h6, p {
     font-weight: 700;
   }
 
-  /* More vertical breathing room between text-only mega menu links */
-  .mega-menu__link:not(:has(.mega-menu__link-image)) {
-    padding-block: var(--padding-xs);
+  /* Wider horizontal gap between mega menu columns */
+  .mega-menu__grid {
+    --menu-horizontal-gap: 4rem;
   }
 }
 

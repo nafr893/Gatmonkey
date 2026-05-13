@@ -241,6 +241,11 @@ h5, h6, p {
   .mega-menu__column > div > .mega-menu__link {
     font-weight: 700;
   }
+
+  /* More vertical breathing room between text-only mega menu links */
+  .mega-menu__link:not(:has(.mega-menu__link-image)) {
+    padding-block: var(--padding-xs);
+  }
 }
 
 /* Scale review block (stars + count) to 75% */

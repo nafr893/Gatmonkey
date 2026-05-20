@@ -121,6 +121,9 @@
 
         cartAdd(variantId)
           .then((cart) => {
+            // Store the server-assigned line key so remove/change works immediately
+            const item = cart.items?.find((i) => String(i.variant_id) === String(variantId));
+            if (item) addBtn.dataset.lineKey = item.key;
             if (qtyValue)   qtyValue.textContent = '1';
             if (addedPrice) addedPrice.textContent = getPriceLabel(card, variantId);
             showQtyRow(qtyRow, addBtn);
@@ -184,9 +187,9 @@
 
   /** @param {HTMLElement} card @param {HTMLButtonElement} addBtn @param {Element|null} qtyRow @param {Element|null} qtyValue */
   function triggerRemove(card, addBtn, qtyRow, qtyValue) {
-    const variantId = addBtn?.dataset.selectedVariant;
-    if (!variantId) return;
-    cartChange(variantId, 0).then((cart) => {
+    if (!addBtn) return;
+    cartChange(addBtn, 0).then((cart) => {
+      delete addBtn.dataset.lineKey;
       if (qtyValue) qtyValue.textContent = '1';
       hideQtyRow(qtyRow, addBtn);
       notifyCart(cart);
@@ -195,9 +198,8 @@
 
   /** @param {HTMLElement} card @param {HTMLButtonElement} addBtn @param {Element|null} qtyValue @param {number} qty */
   function updateQty(card, addBtn, qtyValue, qty) {
-    const variantId = addBtn?.dataset.selectedVariant;
-    if (!variantId) return;
-    cartChange(variantId, qty).then((cart) => {
+    if (!addBtn) return;
+    cartChange(addBtn, qty).then((cart) => {
       if (qtyValue) qtyValue.textContent = String(qty);
       notifyCart(cart);
     });
@@ -224,26 +226,15 @@
       .then(() => fetch('/cart.js').then((r) => r.json()));
   }
 
-  function cartChange(variantId, quantity) {
-    // Use line-item key format (variantId + colon) so Shopify matches correctly for items without properties
+  /** @param {HTMLButtonElement} addBtn @param {number} quantity */
+  function cartChange(addBtn, quantity) {
+    // Use the real line key captured when the item was added; fall back to colon-key format
+    const key = addBtn.dataset.lineKey || (addBtn.dataset.selectedVariant + ':');
     return fetch('/cart/change.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-      body: JSON.stringify({ id: variantId + ':', quantity }),
-    })
-      .then((r) => r.json())
-      .then((cart) => {
-        // Fallback: if the colon-key didn't find the item, try plain variant ID
-        const stillPresent = cart.items?.some((i) => String(i.variant_id) === String(variantId));
-        if (quantity === 0 && stillPresent) {
-          return fetch('/cart/change.js', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-            body: JSON.stringify({ id: Number(variantId), quantity: 0 }),
-          }).then((r) => r.json());
-        }
-        return cart;
-      });
+      body: JSON.stringify({ id: key, quantity }),
+    }).then((r) => r.json());
   }
 
   function notifyCart(cart) {

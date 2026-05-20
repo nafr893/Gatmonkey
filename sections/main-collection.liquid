@@ -117,11 +117,16 @@
                 {% if promo_slot == 0 %}{% assign promo_slot = 3 %}{% endif %}
               {% endif %}
 
-              {% assign promo_image     = section.settings['promo_' | append: promo_slot | append: '_image'] %}
-              {% assign promo_heading   = section.settings['promo_' | append: promo_slot | append: '_heading'] %}
-              {% assign promo_text      = section.settings['promo_' | append: promo_slot | append: '_text'] %}
-              {% assign promo_btn_label = section.settings['promo_' | append: promo_slot | append: '_btn_label'] %}
-              {% assign promo_btn_link  = section.settings['promo_' | append: promo_slot | append: '_btn_link'] %}
+              {% assign promo_key_image     = 'promo_' | append: promo_slot | append: '_image' %}
+              {% assign promo_key_heading   = 'promo_' | append: promo_slot | append: '_heading' %}
+              {% assign promo_key_text      = 'promo_' | append: promo_slot | append: '_text' %}
+              {% assign promo_key_btn_label = 'promo_' | append: promo_slot | append: '_btn_label' %}
+              {% assign promo_key_btn_link  = 'promo_' | append: promo_slot | append: '_btn_link' %}
+              {% assign promo_image     = section.settings[promo_key_image] %}
+              {% assign promo_heading   = section.settings[promo_key_heading] %}
+              {% assign promo_text      = section.settings[promo_key_text] %}
+              {% assign promo_btn_label = section.settings[promo_key_btn_label] %}
+              {% assign promo_btn_link  = section.settings[promo_key_btn_link] %}
 
               {% if promo_image != blank or promo_heading != blank %}
                 {% capture promo_card_inner %}

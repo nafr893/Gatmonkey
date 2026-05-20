@@ -7,6 +7,13 @@ h1, h2, h3, h4 {
 font-family: 'Abel Pro', sans-serif !important;
 }
 
+/* Header / announcement-bar divider: 0.5px */
+.header__row--top,
+.header__row--bottom {
+  --border-bottom-width: 0.5px !important;
+  --border-bottom-width-mobile: 0.5px !important;
+}
+
 /* Button blocks: double horizontal padding + bold label */
 .skre-button-block {
   padding-inline: calc(var(--button-padding-inline) * 2) !important;

@@ -404,6 +404,18 @@
               },
               "blocks": {}
             },
+            "linked_product_card_x7A8aY": {
+              "type": "linked-product-card",
+              "name": "Linked Product Card",
+              "settings": {
+                "linked_product": "1in-magnum-swivel-set",
+                "button_label": "ADD +",
+                "show_description": true,
+                "padding-block-start": 8,
+                "padding-block-end": 8
+              },
+              "blocks": {}
+            },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
@@ -706,6 +718,7 @@
             "group_icgrde",
             "variant_picker_JFwqDa",
             "divider_VJhene",
+            "linked_product_card_x7A8aY",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
             "accordion_p3BQmy"

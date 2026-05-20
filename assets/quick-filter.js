@@ -45,7 +45,7 @@
       });
     });
   }
-
+  
   /** 
    * @param {HTMLElement} clickedButton
    * @param {NodeListOf<HTMLElement>} allButtons

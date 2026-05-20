@@ -12,8 +12,25 @@
 
   /** @param {HTMLElement} block */
   function initBlock(block) {
+    initCardSizes(block);
     initArrows(block);
     block.querySelectorAll('.skre-lpc__card').forEach(initCard);
+  }
+
+  /** Sets card widths to exact pixel values so the scroll container never causes layout blowout. */
+  function initCardSizes(block) {
+    const cards = block.querySelectorAll('.skre-lpc__card');
+    if (!cards.length) return;
+
+    function update() {
+      const w = block.clientWidth;
+      const isMobile = window.innerWidth < 750;
+      const cardWidth = isMobile ? Math.floor(w * 0.88) : w;
+      cards.forEach((card) => { card.style.width = cardWidth + 'px'; });
+    }
+
+    update();
+    new ResizeObserver(update).observe(block);
   }
 
   /** @param {HTMLElement} block */

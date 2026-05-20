@@ -1,0 +1,252 @@
+{% liquid
+  assign s = block.settings
+  assign linked = s.linked_product
+%}
+
+{% if linked != blank %}
+  <script src="{{ 'linked-product-card.js' | asset_url }}" defer></script>
+
+  {% assign first_variant = linked.selected_or_first_available_variant %}
+
+  <div
+    class="skre-lpc spacing-style"
+    style="{% render 'spacing-style', settings: s %}"
+    data-block-id="{{ block.id }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="skre-lpc__inner">
+
+      {% if linked.featured_image %}
+        <img
+          class="skre-lpc__thumb"
+          src="{{ linked.featured_image | image_url: width: 160 }}"
+          alt="{{ linked.featured_image.alt | default: linked.title | escape }}"
+          width="80"
+          height="80"
+          loading="lazy"
+        >
+      {% endif %}
+
+      <div class="skre-lpc__info">
+        <p class="skre-lpc__title">{{ linked.title }}</p>
+
+        {% unless linked.has_only_default_variant %}
+          <p class="skre-lpc__selected-label" data-lpc-selected-label>
+            {{ linked.options.first }}:&nbsp;<span>{{ first_variant.title }}</span>
+          </p>
+        {% endunless %}
+
+        <div class="skre-lpc__variants" role="group" aria-label="{{ linked.title }} variants">
+          {% for variant in linked.variants %}
+            <button
+              type="button"
+              class="skre-lpc__variant-btn{% if forloop.first %} skre-lpc__variant-btn--selected{% endif %}"
+              data-lpc-variant-btn
+              data-variant-id="{{ variant.id }}"
+              data-variant-price="{{ variant.price | money }}"
+              data-variant-title="{{ variant.title | escape }}"
+              aria-pressed="{{ forloop.first }}"
+              {% unless variant.available %}disabled{% endunless %}
+            >
+              {{- variant.title -}}
+            </button>
+          {% endfor %}
+        </div>
+
+        {% if s.show_description and linked.description != blank %}
+          <p class="skre-lpc__desc">{{ linked.description | strip_html | truncatewords: 20 }}</p>
+        {% endif %}
+
+        <p class="skre-lpc__price" data-lpc-price>{{ first_variant.price | money }}</p>
+      </div>
+
+      <button
+        type="button"
+        class="skre-lpc__add-btn"
+        data-lpc-add-btn
+        data-selected-variant="{{ first_variant.id }}"
+        aria-label="Add {{ linked.title | escape }} to cart"
+      >
+        {{- s.button_label | default: 'ADD +' -}}
+      </button>
+
+    </div>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .skre-lpc {
+    width: 100%;
+  }
+
+  .skre-lpc__inner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid rgb(var(--color-border-rgb) / 0.35);
+    border-radius: var(--style-border-radius-cards, 4px);
+  }
+
+  .skre-lpc__thumb {
+    flex: 0 0 auto;
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .skre-lpc__info {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .skre-lpc__title {
+    margin: 0;
+    font-size: var(--font-size--sm);
+    font-weight: 700;
+  }
+
+  .skre-lpc__selected-label {
+    margin: 0;
+    font-size: var(--font-size--sm);
+    color: var(--color-foreground-muted, var(--color-foreground));
+  }
+
+  .skre-lpc__variants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.15rem;
+  }
+
+  .skre-lpc__variant-btn {
+    appearance: none;
+    padding: 5px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--style-border-radius-pills, 4px);
+    background: transparent;
+    color: var(--color-foreground);
+    font-family: inherit;
+    font-size: var(--font-size--sm);
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+  }
+
+  .skre-lpc__variant-btn--selected {
+    background: var(--color-foreground);
+    color: var(--color-background);
+    border-color: var(--color-foreground);
+  }
+
+  .skre-lpc__variant-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .skre-lpc__desc {
+    margin: 0;
+    font-size: var(--font-size--sm);
+    color: var(--color-foreground-muted, var(--color-foreground));
+  }
+
+  .skre-lpc__price {
+    margin: 0;
+    font-size: var(--font-size--sm);
+    font-weight: 700;
+  }
+
+  .skre-lpc__add-btn {
+    flex: 0 0 auto;
+    appearance: none;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--color-foreground);
+    border-radius: var(--style-border-radius-buttons, 4px);
+    background: transparent;
+    color: var(--color-foreground);
+    font-family: inherit;
+    font-size: var(--font-size--sm);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s, color 0.15s;
+    align-self: center;
+  }
+
+  .skre-lpc__add-btn:hover {
+    background: var(--color-foreground);
+    color: var(--color-background);
+  }
+
+  .skre-lpc__add-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  @media screen and (max-width: 749px) {
+    .skre-lpc__add-btn {
+      padding: 0.65rem 0.75rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Linked Product Card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Displays a separate product as an add-on card with its own variant picker and Add to Cart button. Inventory is tracked independently."
+    },
+    {
+      "type": "product",
+      "id": "linked_product",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "ADD +"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show product description",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    }
+  ]
+}
+{% endschema %}

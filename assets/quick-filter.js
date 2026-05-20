@@ -46,7 +46,7 @@
     });
   }
 
-  /**
+  /** 
    * @param {HTMLElement} clickedButton
    * @param {NodeListOf<HTMLElement>} allButtons
    * @param {Record<string,string>} productFilterMap

@@ -109,6 +109,20 @@
               </div>
             </div>
 
+            <div class="skre-lpc__info-panel" aria-hidden="true" data-lpc-info-panel>
+              <div class="skre-lpc__info-panel-header">
+                <span class="skre-lpc__info-panel-title">{{ linked.title }}</span>
+                <button type="button" class="skre-lpc__info-panel-close" data-lpc-info-close aria-label="Close">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M1.5 1.5L12.5 12.5M12.5 1.5L1.5 12.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="skre-lpc__info-panel-body">
+                {{ linked.description }}
+              </div>
+            </div>
+
             <div class="skre-lpc__qty-row" data-lpc-qty-row aria-hidden="true">
               <span class="skre-lpc__added-label">
                 Added &mdash; <strong data-lpc-added-price>{{ fv.price | money }}</strong>
@@ -156,6 +170,7 @@
     border: 1px solid rgb(var(--color-border-rgb) / 0.35);
     border-radius: var(--style-border-radius-cards, 4px);
     overflow: hidden;
+    position: relative;
   }
 
   /* ── Desktop: forced rem width — no percentages, no scroll container ── */
@@ -378,6 +393,75 @@
   .skre-lpc__add-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  /* ── Info panel — slides up over the card on "More info" tap ── */
+  .skre-lpc__info-panel {
+    position: absolute;
+    inset: 0;
+    background: var(--color-background);
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+  }
+
+  .skre-lpc__info-panel--open {
+    transform: translateY(0);
+  }
+
+  .skre-lpc__info-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.85rem;
+    border-bottom: 1px solid rgb(var(--color-border-rgb) / 0.2);
+    flex-shrink: 0;
+  }
+
+  .skre-lpc__info-panel-title {
+    margin: 0;
+    font-size: var(--font-size--sm);
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .skre-lpc__info-panel-close {
+    appearance: none;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--color-foreground);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+  }
+
+  .skre-lpc__info-panel-close:hover {
+    opacity: 1;
+  }
+
+  .skre-lpc__info-panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.85rem;
+    font-size: var(--font-size--sm);
+    line-height: 1.55;
+    opacity: 0.75;
+  }
+
+  .skre-lpc__info-panel-body p {
+    margin: 0 0 0.5em;
   }
 
   /* ── Quantity row — slides down after adding ── */

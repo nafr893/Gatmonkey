@@ -91,6 +91,24 @@
     const minusBtn    = card.querySelector('[data-lpc-qty-minus]');
     const plusBtn     = card.querySelector('[data-lpc-qty-plus]');
     const removeBtn   = card.querySelector('[data-lpc-remove]');
+    const moreInfoLink = card.querySelector('.skre-lpc__more-info');
+    const infoPanel   = card.querySelector('[data-lpc-info-panel]');
+    const infoClose   = card.querySelector('[data-lpc-info-close]');
+
+    // ── More info panel ────────────────────────────────────────────
+    if (moreInfoLink && infoPanel) {
+      moreInfoLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        infoPanel.classList.add('skre-lpc__info-panel--open');
+        infoPanel.setAttribute('aria-hidden', 'false');
+      });
+    }
+    if (infoClose && infoPanel) {
+      infoClose.addEventListener('click', () => {
+        infoPanel.classList.remove('skre-lpc__info-panel--open');
+        infoPanel.setAttribute('aria-hidden', 'true');
+      });
+    }
 
     // ── Variant selection ──────────────────────────────────────────
     variantBtns.forEach((btn) => {

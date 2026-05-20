@@ -193,20 +193,6 @@
       scroll-snap-align: none;
     }
 
-    /* Desktop card: collapse to single row — thumb | info | add btn */
-    .skre-lpc__card-top {
-      grid-template-areas: "thumb info foot";
-      grid-template-columns: 72px 1fr auto;
-      row-gap: 0;
-    }
-
-    .skre-lpc__card-foot {
-      align-self: center;
-    }
-
-    .skre-lpc__more-info {
-      display: none;
-    }
   }
 
 
@@ -309,6 +295,23 @@
     text-decoration: underline;
     opacity: 0.6;
     white-space: nowrap;
+  }
+
+  /* Desktop card: collapse to 3-col single row — must come after base rules to win */
+  @media screen and (min-width: 750px) {
+    .skre-lpc__card-top {
+      grid-template-areas: "thumb info foot";
+      grid-template-columns: 72px 1fr auto;
+      row-gap: 0;
+    }
+
+    .skre-lpc__card-foot {
+      align-self: center;
+    }
+
+    .skre-lpc__more-info {
+      display: none;
+    }
   }
 
   .skre-lpc__title {

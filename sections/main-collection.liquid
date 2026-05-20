@@ -64,32 +64,33 @@
           </li>
 
           {% if section.settings.show_collection_promos %}
-            {% assign promo_modulo = forloop.index | modulo: 7 %}
-            {% if promo_modulo == 0 %}
-              {% assign promo_slot = forloop.index | divided_by: 7 %}
+            {% assign promo_modulo_m = forloop.index | modulo: 7 %}
+            {% assign promo_modulo_d = forloop.index | modulo: 9 %}
+
+            {% if promo_modulo_m == 0 or promo_modulo_d == 0 %}
+              {% comment %}Slot cycles 1-3; mobile position takes precedence when both fire{% endcomment %}
+              {% if promo_modulo_m == 0 %}
+                {% assign promo_slot = forloop.index | divided_by: 7 %}
+              {% else %}
+                {% assign promo_slot = forloop.index | divided_by: 9 %}
+              {% endif %}
               {% if promo_slot > 3 %}
                 {% assign promo_slot = promo_slot | modulo: 3 %}
                 {% if promo_slot == 0 %}{% assign promo_slot = 3 %}{% endif %}
               {% endif %}
 
-              {% assign promo_img_key = 'promo_' | append: promo_slot | append: '_image' %}
-              {% assign promo_head_key = 'promo_' | append: promo_slot | append: '_heading' %}
-              {% assign promo_text_key = 'promo_' | append: promo_slot | append: '_text' %}
-              {% assign promo_label_key = 'promo_' | append: promo_slot | append: '_btn_label' %}
-              {% assign promo_link_key = 'promo_' | append: promo_slot | append: '_btn_link' %}
-
-              {% assign promo_image = section.settings[promo_img_key] %}
-              {% assign promo_heading = section.settings[promo_head_key] %}
-              {% assign promo_text = section.settings[promo_text_key] %}
-              {% assign promo_btn_label = section.settings[promo_label_key] %}
-              {% assign promo_btn_link = section.settings[promo_link_key] %}
+              {% assign promo_image     = section.settings['promo_' | append: promo_slot | append: '_image'] %}
+              {% assign promo_heading   = section.settings['promo_' | append: promo_slot | append: '_heading'] %}
+              {% assign promo_text      = section.settings['promo_' | append: promo_slot | append: '_text'] %}
+              {% assign promo_btn_label = section.settings['promo_' | append: promo_slot | append: '_btn_label'] %}
+              {% assign promo_btn_link  = section.settings['promo_' | append: promo_slot | append: '_btn_link'] %}
 
               {% if promo_image != blank or promo_heading != blank %}
-                <li class="skre-collection-promo-item">
+                {% capture promo_card_inner %}
                   <a class="skre-promo-card" href="{{ promo_btn_link | default: '#' }}">
                     {% if promo_image %}
                       <img
-                        src="{{ promo_image | image_url: width: 1200 }}"
+                        src="{{ promo_image | image_url: width: 800 }}"
                         alt="{{ promo_image.alt | default: promo_heading | escape }}"
                         class="skre-promo-card__img"
                         loading="lazy"
@@ -106,7 +107,14 @@
                       {% if promo_btn_label != blank %}<span class="skre-promo-card__btn">{{ promo_btn_label }}</span>{% endif %}
                     </div>
                   </a>
-                </li>
+                {% endcapture %}
+
+                {% if promo_modulo_m == 0 %}
+                  <li class="skre-collection-promo-item skre-collection-promo-item--mobile">{{ promo_card_inner }}</li>
+                {% endif %}
+                {% if promo_modulo_d == 0 %}
+                  <li class="skre-collection-promo-item skre-collection-promo-item--desktop">{{ promo_card_inner }}</li>
+                {% endif %}
               {% endif %}
             {% endif %}
           {% endif %}

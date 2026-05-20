@@ -254,10 +254,12 @@ h5, h6, p {
     --menu-horizontal-gap: 4rem;
   }
 
-  /* Keep mega menu text links on a single line */
-  .mega-menu__link {
-    white-space: nowrap;
-  }
+}
+
+/* Keep mega menu text links on a single line — applies in drawer and desktop */
+.mega-menu__link,
+.menu-drawer__menu-item {
+  white-space: nowrap;
 }
 
 /* Scale review block (stars + count) to 75% */
@@ -447,18 +449,27 @@ input.search-input::placeholder,
     }
 }
 
-/* ── Collection promo card — full-width banner injected after every 7 products ── */
+/* ── Collection promo card — product-card sized grid cell ── */
 .skre-collection-promo-item {
-  grid-column: 1 / -1;
   list-style: none;
 }
 
-.skre-collection-promo-item .skre-promo-card {
-  min-height: 280px;
+/* Mobile: show after every 7th product; hide desktop variant */
+.skre-collection-promo-item--desktop {
+  display: none;
 }
 
+/* Desktop: show after every 9th product; hide mobile variant */
 @media screen and (min-width: 750px) {
-  .skre-collection-promo-item .skre-promo-card {
-    min-height: 360px;
+  .skre-collection-promo-item--mobile {
+    display: none;
   }
+  .skre-collection-promo-item--desktop {
+    display: list-item;
+  }
+}
+
+.skre-collection-promo-item .skre-promo-card {
+  min-height: 0;
+  height: 100%;
 }

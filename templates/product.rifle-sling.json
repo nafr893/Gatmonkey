@@ -408,9 +408,13 @@
               "type": "linked-product-card",
               "name": "Linked Product Card",
               "settings": {
-                "linked_product": "1in-magnum-swivel-set",
                 "button_label": "ADD +",
-                "show_description": true,
+                "product_1": "utg®-qd-sling-swivel-1-loop",
+                "product_2": "sling-swivel-1-38-push-button-quick-detach",
+                "product_3": "grovtec-1-heavy-duty-push-button-swivel-pack-of-2",
+                "product_4": "1in-magnum-swivel-set",
+                "product_5": "",
+                "product_6": "",
                 "padding-block-start": 8,
                 "padding-block-end": 8
               },

@@ -97,7 +97,6 @@
         if (!variantId) return;
 
         addBtn.disabled = true;
-        addBtn.textContent = '...';
 
         cartAdd(variantId)
           .then((cart) => {
@@ -108,7 +107,6 @@
           })
           .catch(() => {
             addBtn.disabled = false;
-            addBtn.textContent = restoreLabel(card);
           });
       });
     }
@@ -160,7 +158,6 @@
     if (addBtn) {
       addBtn.style.display = '';
       addBtn.disabled = false;
-      addBtn.textContent = restoreLabel(addBtn.closest('.skre-lpc'));
     }
   }
 
@@ -194,12 +191,6 @@
   }
 
   /** @param {HTMLElement|null} ctx */
-  function restoreLabel(ctx) {
-    const block = ctx?.closest?.('[data-block-id]') || ctx;
-    return block?.querySelector?.('[data-lpc-add-btn]')?.closest?.('.skre-lpc')
-      ?.querySelector?.('.skre-lpc__add-btn')?.textContent?.trim() || 'Add +';
-  }
-
   // ── Cart API ─────────────────────────────────────────────────────
 
   function cartAdd(variantId) {

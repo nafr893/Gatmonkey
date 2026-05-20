@@ -22,6 +22,16 @@
   }
 {% endjavascript %}
 
+{% style %}
+  @media screen and (min-width: 750px) {
+    .skre-collection-promo-item--mobile  { display: none !important; }
+    .skre-collection-promo-item--desktop { display: list-item !important; }
+  }
+  @media screen and (max-width: 749px) {
+    .skre-collection-promo-item--desktop { display: none !important; }
+  }
+{% endstyle %}
+
 {% comment %} We always render this full-width, as the child blocks have width: page/full settings {% endcomment %}
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <results-list

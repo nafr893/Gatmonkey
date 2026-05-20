@@ -67,6 +67,11 @@
       }
     });
 
+    // Hide promo cards when a filter is active — product count is unknown after filtering
+    document.querySelectorAll('.skre-collection-promo-item').forEach((el) => {
+      /** @type {HTMLElement} */ (el).style.display = filterValue === 'all' ? '' : 'none';
+    });
+
     syncLoadMore(filterValue, productFilterMap);
   }
   

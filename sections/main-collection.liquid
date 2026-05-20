@@ -73,7 +73,7 @@
             {% # theme-check-enable %}
           </li>
 
-          {% if section.settings.show_collection_promos %}
+          {% if section.settings.show_collection_promos and forloop.last == false %}
             {% assign promo_modulo_m = forloop.index | modulo: 7 %}
             {% assign promo_modulo_d = forloop.index | modulo: 9 %}
 

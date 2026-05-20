@@ -32,6 +32,34 @@
   }
 {% endstyle %}
 
+<script>
+  (function () {
+    function applyPromoBreakpoint() {
+      var desktop = window.matchMedia('(min-width: 750px)').matches;
+      document.querySelectorAll('.skre-collection-promo-item--mobile').forEach(function (el) {
+        if (desktop) {
+          el.style.setProperty('display', 'none', 'important');
+        } else {
+          el.style.removeProperty('display');
+        }
+      });
+      document.querySelectorAll('.skre-collection-promo-item--desktop').forEach(function (el) {
+        if (!desktop) {
+          el.style.setProperty('display', 'none', 'important');
+        } else {
+          el.style.removeProperty('display');
+        }
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', applyPromoBreakpoint);
+    } else {
+      applyPromoBreakpoint();
+    }
+    window.matchMedia('(min-width: 750px)').addEventListener('change', applyPromoBreakpoint);
+  })();
+</script>
+
 {% comment %} We always render this full-width, as the child blocks have width: page/full settings {% endcomment %}
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <results-list

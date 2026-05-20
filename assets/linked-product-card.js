@@ -42,17 +42,15 @@
     }
 
     function applyDesktop() {
-      // block.clientWidth is reliable here: overflow:hidden on .skre-lpc (set by CSS
-      // media query) fully constrains the block to its column width with no scroll container.
-      cardPx = block.clientWidth;
+      // CSS sets the card width via flex-basis (38rem / max-width: 100%).
+      // Read the rendered pixel value from the first card after CSS applies so the
+      // transform step stays in sync without overriding the CSS-driven width.
       gapPx  = parseFloat(getComputedStyle(track).columnGap) || 12;
-      cards.forEach((card) => { card.style.width = cardPx + 'px'; });
+      cardPx = cards[0].getBoundingClientRect().width;
       goTo(currentIndex);
     }
 
     function applyMobile() {
-      // Clear any JS overrides — CSS handles 88% width + native scroll
-      cards.forEach((card) => { card.style.width = ''; });
       track.style.transform = '';
     }
 

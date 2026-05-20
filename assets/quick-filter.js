@@ -41,7 +41,7 @@
 
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
-        handleFilterClick(button, buttons, productFilterMap);
+        handleFilterClick(button, buttons, productFilterMap); 
       });
     });
   }

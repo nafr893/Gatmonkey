@@ -155,9 +155,11 @@
     overflow: hidden;
   }
 
-  /* ── Desktop: transform carousel — overflow:hidden clips cards, no scroll container ── */
+  /* ── Desktop: forced rem width — no percentages, no scroll container ── */
   @media screen and (min-width: 750px) {
     .skre-lpc {
+      width: 38rem;
+      max-width: 100%;
       overflow: hidden;
     }
 
@@ -168,9 +170,9 @@
     }
 
     .skre-lpc__card {
-      flex: 0 0 100%;
+      flex: 0 0 38rem;
+      max-width: 100%;
       scroll-snap-align: none;
-      /* JS overrides width with exact block.clientWidth px value */
     }
   }
 

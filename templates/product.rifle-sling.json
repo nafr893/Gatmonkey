@@ -748,6 +748,7 @@
         "text_6RCxDB": {
           "type": "text",
           "name": "t:names.text",
+          "disabled": true,
           "settings": {
             "text": "<p>Assembly Overview</p>",
             "width": "fit-content",

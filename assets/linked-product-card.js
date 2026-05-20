@@ -101,6 +101,7 @@
         e.preventDefault();
         infoPanel.classList.add('skre-lpc__info-panel--open');
         infoPanel.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('skre-lpc-panel-open');
         document.body.style.overflow = 'hidden';
       });
     }
@@ -108,6 +109,7 @@
       infoClose.addEventListener('click', () => {
         infoPanel.classList.remove('skre-lpc__info-panel--open');
         infoPanel.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('skre-lpc-panel-open');
         document.body.style.overflow = '';
       });
     }

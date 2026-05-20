@@ -12,49 +12,73 @@
 
   /** @param {HTMLElement} block */
   function initBlock(block) {
-    initCardSizes(block);
-    initArrows(block);
+    initCarousel(block);
     block.querySelectorAll('.skre-lpc__card').forEach(initCard);
   }
 
-  /** Sets card widths in pixels via ResizeObserver to avoid CSS circular sizing in overflow containers. */
-  function initCardSizes(block) {
-    const cards = block.querySelectorAll('.skre-lpc__card');
-    if (!cards.length) return;
-
-    function update() {
-      const isMobile = window.innerWidth < 750;
-      const cardWidth = isMobile ? Math.floor(block.clientWidth * 0.88) : block.clientWidth;
-      cards.forEach((card) => { card.style.width = cardWidth + 'px'; });
-    }
-
-    update();
-    new ResizeObserver(update).observe(block);
-  }
-
-  /** @param {HTMLElement} block */
-  function initArrows(block) {
+  /**
+   * Hybrid carousel:
+   * - Mobile (<750px): native overflow-x scroll + snap (no layout risk in single-column)
+   * - Desktop (≥750px): transform-based, overflow:hidden clips cards — no scroll container,
+   *   no column blowout risk
+   * @param {HTMLElement} block
+   */
+  function initCarousel(block) {
     const track   = /** @type {HTMLElement|null} */ (block.querySelector('[data-lpc-track]'));
+    const cards   = /** @type {NodeListOf<HTMLElement>} */ (block.querySelectorAll('.skre-lpc__card'));
     const prevBtn = /** @type {HTMLButtonElement|null} */ (block.querySelector('[data-lpc-prev]'));
     const nextBtn = /** @type {HTMLButtonElement|null} */ (block.querySelector('[data-lpc-next]'));
-    if (!track || (!prevBtn && !nextBtn)) return;
+    if (!track || !cards.length) return;
 
-    function updateArrowState() {
+    let currentIndex = 0;
+    let cardPx = 0;
+    let gapPx  = 0;
+
+    function goTo(index) {
+      currentIndex = Math.max(0, Math.min(index, cards.length - 1));
+      track.style.transform = `translateX(-${currentIndex * (cardPx + gapPx)}px)`;
+      if (prevBtn) prevBtn.disabled = currentIndex === 0;
+      if (nextBtn) nextBtn.disabled = currentIndex === cards.length - 1;
+    }
+
+    function applyDesktop() {
+      // block.clientWidth is reliable here: overflow:hidden on .skre-lpc (set by CSS
+      // media query) fully constrains the block to its column width with no scroll container.
+      cardPx = block.clientWidth;
+      gapPx  = parseFloat(getComputedStyle(track).columnGap) || 12;
+      cards.forEach((card) => { card.style.width = cardPx + 'px'; });
+      goTo(currentIndex);
+    }
+
+    function applyMobile() {
+      // Clear any JS overrides — CSS handles 88% width + native scroll
+      cards.forEach((card) => { card.style.width = ''; });
+      track.style.transform = '';
+    }
+
+    function update() {
+      if (window.innerWidth >= 750) {
+        applyDesktop();
+      } else {
+        applyMobile();
+      }
+    }
+
+    // Desktop arrow navigation
+    prevBtn?.addEventListener('click', () => goTo(currentIndex - 1));
+    nextBtn?.addEventListener('click', () => goTo(currentIndex + 1));
+
+    // Mobile: sync arrow state with native scroll (arrows are hidden on mobile but keep state clean)
+    track.addEventListener('scroll', () => {
+      if (window.innerWidth >= 750) return;
       const atStart = track.scrollLeft <= 4;
       const atEnd   = track.scrollLeft >= track.scrollWidth - track.clientWidth - 4;
       if (prevBtn) prevBtn.disabled = atStart;
       if (nextBtn) nextBtn.disabled = atEnd;
-    }
+    }, { passive: true });
 
-    prevBtn?.addEventListener('click', () => {
-      track.scrollBy({ left: -track.clientWidth, behavior: 'smooth' });
-    });
-    nextBtn?.addEventListener('click', () => {
-      track.scrollBy({ left: track.clientWidth, behavior: 'smooth' });
-    });
-
-    track.addEventListener('scroll', updateArrowState, { passive: true });
-    updateArrowState();
+    update();
+    new ResizeObserver(update).observe(block);
   }
 
   /** @param {HTMLElement} card */

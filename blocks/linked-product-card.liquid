@@ -126,12 +126,11 @@
 {% endif %}
 
 {% stylesheet %}
+  /* ── Mobile: native horizontal scroll (single-column layout, no blowout risk) ── */
   .skre-lpc {
     min-width: 0;
-    overflow: hidden;
   }
 
-  /* ── Track: swipeable on both mobile and desktop ── */
   .skre-lpc__track {
     display: flex;
     gap: 0.75rem;
@@ -154,6 +153,25 @@
     border: 1px solid rgb(var(--color-border-rgb) / 0.35);
     border-radius: var(--style-border-radius-cards, 4px);
     overflow: hidden;
+  }
+
+  /* ── Desktop: transform carousel — overflow:hidden clips cards, no scroll container ── */
+  @media screen and (min-width: 750px) {
+    .skre-lpc {
+      overflow: hidden;
+    }
+
+    .skre-lpc__track {
+      overflow-x: visible;
+      scroll-snap-type: none;
+      transition: transform 0.3s ease;
+    }
+
+    .skre-lpc__card {
+      flex: 0 0 100%;
+      scroll-snap-align: none;
+      /* JS overrides width with exact block.clientWidth px value */
+    }
   }
 
 
@@ -203,9 +221,15 @@
     cursor: default;
   }
 
-  /* Arrows hidden: mobile uses swipe, desktop uses stacked layout */
+  /* Arrows: hidden on mobile (native swipe), visible on desktop (transform carousel) */
   .skre-lpc__arrows {
     display: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .skre-lpc__arrows {
+      display: flex;
+    }
   }
 
   /* ── Card top row ── */

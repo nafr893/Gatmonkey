@@ -407,7 +407,6 @@
             "linked_product_card_x7A8aY": {
               "type": "linked-product-card",
               "name": "Linked Product Card",
-              "disabled": true,
               "settings": {
                 "heading": "Hardware Options",
                 "button_label": "ADD +",

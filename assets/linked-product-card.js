@@ -101,12 +101,14 @@
         e.preventDefault();
         infoPanel.classList.add('skre-lpc__info-panel--open');
         infoPanel.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
       });
     }
     if (infoClose && infoPanel) {
       infoClose.addEventListener('click', () => {
         infoPanel.classList.remove('skre-lpc__info-panel--open');
         infoPanel.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
       });
     }
 

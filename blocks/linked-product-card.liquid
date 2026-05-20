@@ -1,7 +1,7 @@
 {% liquid
   assign s = block.settings
   assign product_count = 0
-  for n in (1..6)
+  for n in (1..15)
     assign key = 'product_' | append: n
     if s[key] != blank
       assign product_count = product_count | plus: 1
@@ -43,7 +43,7 @@
     {% endif %}
 
     <div class="skre-lpc__track" data-lpc-track>
-      {% for n in (1..6) %}
+      {% for n in (1..15) %}
         {% assign key = 'product_' | append: n %}
         {% assign linked = s[key] %}
         {% if linked != blank %}
@@ -632,6 +632,87 @@
     {
       "type": "product",
       "id": "product_6",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 7"
+    },
+    {
+      "type": "product",
+      "id": "product_7",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 8"
+    },
+    {
+      "type": "product",
+      "id": "product_8",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 9"
+    },
+    {
+      "type": "product",
+      "id": "product_9",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 10"
+    },
+    {
+      "type": "product",
+      "id": "product_10",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 11"
+    },
+    {
+      "type": "product",
+      "id": "product_11",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 12"
+    },
+    {
+      "type": "product",
+      "id": "product_12",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 13"
+    },
+    {
+      "type": "product",
+      "id": "product_13",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 14"
+    },
+    {
+      "type": "product",
+      "id": "product_14",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 15"
+    },
+    {
+      "type": "product",
+      "id": "product_15",
       "label": "Product"
     },
     {

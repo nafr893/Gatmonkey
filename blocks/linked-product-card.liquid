@@ -1,16 +1,15 @@
 {% liquid
   assign s = block.settings
-  assign has_any = false
+  assign product_count = 0
   for n in (1..6)
     assign key = 'product_' | append: n
     if s[key] != blank
-      assign has_any = true
-      break
+      assign product_count = product_count | plus: 1
     endif
   endfor
 %}
 
-{% if has_any %}
+{% if product_count > 0 %}
   <script src="{{ 'linked-product-card.js' | asset_url }}" defer></script>
 
   <div
@@ -19,7 +18,31 @@
     data-block-id="{{ block.id }}"
     {{ block.shopify_attributes }}
   >
-    <div class="skre-lpc__track">
+    {% if s.heading != blank or product_count > 1 %}
+      <div class="skre-lpc__header">
+        {% if s.heading != blank %}
+          <p class="skre-lpc__heading">{{ s.heading }}</p>
+        {% else %}
+          <span></span>
+        {% endif %}
+        {% if product_count > 1 %}
+          <div class="skre-lpc__arrows">
+            <button type="button" class="skre-lpc__arrow" data-lpc-prev aria-label="Previous" disabled>
+              <svg width="10" height="16" viewBox="0 0 10 16" fill="none" aria-hidden="true">
+                <path d="M8.5 1.5L1.5 8L8.5 14.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button type="button" class="skre-lpc__arrow" data-lpc-next aria-label="Next">
+              <svg width="10" height="16" viewBox="0 0 10 16" fill="none" aria-hidden="true">
+                <path d="M1.5 1.5L8.5 8L1.5 14.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="skre-lpc__track" data-lpc-track>
       {% for n in (1..6) %}
         {% assign key = 'product_' | append: n %}
         {% assign linked = s[key] %}
@@ -132,8 +155,54 @@
 
   @media screen and (min-width: 750px) {
     .skre-lpc__card {
-      flex: 0 0 380px;
+      flex: 0 0 100%;
     }
+  }
+
+  /* ── Header row: heading + arrows ── */
+  .skre-lpc__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .skre-lpc__heading {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .skre-lpc__arrows {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .skre-lpc__arrow {
+    appearance: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgb(var(--color-border-rgb) / 0.5);
+    background: transparent;
+    color: var(--color-foreground);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s, opacity 0.15s;
+    flex-shrink: 0;
+  }
+
+  .skre-lpc__arrow:hover {
+    background: rgb(var(--color-foreground-rgb) / 0.06);
+  }
+
+  .skre-lpc__arrow:disabled {
+    opacity: 0.3;
+    cursor: default;
   }
 
   /* ── Card top row ── */
@@ -333,6 +402,12 @@
     {
       "type": "paragraph",
       "content": "Displays linked products as add-on cards with independent inventory. On mobile, cards are swipeable. On desktop they show as a grid."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "placeholder": "Pair With"
     },
     {
       "type": "text",

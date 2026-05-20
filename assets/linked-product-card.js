@@ -12,7 +12,33 @@
 
   /** @param {HTMLElement} block */
   function initBlock(block) {
+    initArrows(block);
     block.querySelectorAll('.skre-lpc__card').forEach(initCard);
+  }
+
+  /** @param {HTMLElement} block */
+  function initArrows(block) {
+    const track   = /** @type {HTMLElement|null} */ (block.querySelector('[data-lpc-track]'));
+    const prevBtn = /** @type {HTMLButtonElement|null} */ (block.querySelector('[data-lpc-prev]'));
+    const nextBtn = /** @type {HTMLButtonElement|null} */ (block.querySelector('[data-lpc-next]'));
+    if (!track || (!prevBtn && !nextBtn)) return;
+
+    function updateArrowState() {
+      const atStart = track.scrollLeft <= 4;
+      const atEnd   = track.scrollLeft >= track.scrollWidth - track.clientWidth - 4;
+      if (prevBtn) prevBtn.disabled = atStart;
+      if (nextBtn) nextBtn.disabled = atEnd;
+    }
+
+    prevBtn?.addEventListener('click', () => {
+      track.scrollBy({ left: -track.clientWidth, behavior: 'smooth' });
+    });
+    nextBtn?.addEventListener('click', () => {
+      track.scrollBy({ left: track.clientWidth, behavior: 'smooth' });
+    });
+
+    track.addEventListener('scroll', updateArrowState, { passive: true });
+    updateArrowState();
   }
 
   /** @param {HTMLElement} card */

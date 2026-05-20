@@ -69,7 +69,7 @@
           "name": "t:names.button",
           "settings": {
             "label": "Shop all",
-            "link": "shopify://collections/all",
+            "link": "shopify://collections/products",
             "open_in_new_tab": false,
             "style_class": "button",
             "width": "fit-content",

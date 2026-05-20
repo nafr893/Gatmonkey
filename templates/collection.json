@@ -155,7 +155,7 @@
             "card-gallery": {
               "type": "_product-card-gallery",
               "settings": {
-                "image_ratio": "adapt",
+                "image_ratio": "square",
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
@@ -250,7 +250,21 @@
         "padding-inline-end": 0,
         "color_scheme": "scheme-1",
         "padding-block-start": 0,
-        "padding-block-end": 32
+        "padding-block-end": 32,
+        "show_collection_promos": true,
+        "promo_1_image": "shopify://shop_images/Gatmonkey_Homepage_Hero_v1.webp",
+        "promo_1_heading": "SAVE UP TO 30%",
+        "promo_1_text": "Shop Clearance",
+        "promo_1_btn_label": "SHOP NOW",
+        "promo_1_btn_link": "shopify://collections/clearance",
+        "promo_2_heading": "",
+        "promo_2_text": "",
+        "promo_2_btn_label": "",
+        "promo_2_btn_link": "",
+        "promo_3_heading": "",
+        "promo_3_text": "",
+        "promo_3_btn_label": "",
+        "promo_3_btn_link": ""
       }
     }
   },

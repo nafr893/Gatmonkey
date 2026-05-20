@@ -146,15 +146,28 @@
     display: none;
   }
 
-  /* Width is set in JS via ResizeObserver to avoid circular sizing in overflow containers */
   .skre-lpc__card {
     flex-shrink: 0;
     flex-basis: auto;
-    width: 88%; /* fallback before JS runs */
+    width: 88%;
     scroll-snap-align: start;
     border: 1px solid rgb(var(--color-border-rgb) / 0.35);
     border-radius: var(--style-border-radius-cards, 4px);
     overflow: hidden;
+  }
+
+  /* Desktop: stack cards vertically, no carousel */
+  @media screen and (min-width: 750px) {
+    .skre-lpc__track {
+      flex-direction: column;
+      overflow-x: visible;
+      scroll-snap-type: none;
+    }
+
+    .skre-lpc__card {
+      width: 100%;
+      flex-shrink: 1;
+    }
   }
 
   /* ── Header row: heading + arrows ── */
@@ -203,10 +216,9 @@
     cursor: default;
   }
 
-  @media screen and (max-width: 749px) {
-    .skre-lpc__arrows {
-      display: none;
-    }
+  /* Arrows hidden: mobile uses swipe, desktop uses stacked layout */
+  .skre-lpc__arrows {
+    display: none;
   }
 
   /* ── Card top row ── */

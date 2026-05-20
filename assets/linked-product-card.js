@@ -17,15 +17,17 @@
     block.querySelectorAll('.skre-lpc__card').forEach(initCard);
   }
 
-  /** Sets card widths to exact pixel values so the scroll container never causes layout blowout. */
+  /** Sets card widths on mobile only (88% peek). Desktop uses CSS stacked layout. */
   function initCardSizes(block) {
     const cards = block.querySelectorAll('.skre-lpc__card');
     if (!cards.length) return;
 
     function update() {
-      const w = block.clientWidth;
-      const isMobile = window.innerWidth < 750;
-      const cardWidth = isMobile ? Math.floor(w * 0.88) : w;
+      if (window.innerWidth >= 750) {
+        cards.forEach((card) => { card.style.width = ''; });
+        return;
+      }
+      const cardWidth = Math.floor(block.clientWidth * 0.88);
       cards.forEach((card) => { card.style.width = cardWidth + 'px'; });
     }
 

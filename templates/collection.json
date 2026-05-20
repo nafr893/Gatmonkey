@@ -251,7 +251,7 @@
         "color_scheme": "scheme-1",
         "padding-block-start": 0,
         "padding-block-end": 32,
-        "show_collection_promos": false,
+        "show_collection_promos": true,
         "promo_1_image": "shopify://shop_images/Gatmonkey_Homepage_Hero_v1.webp",
         "promo_1_heading": "SAVE UP TO 30%",
         "promo_1_text": "Shop Clearance",

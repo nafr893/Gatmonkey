@@ -64,6 +64,7 @@
     "pills_border_radius": 0,
     "cart_type": "drawer",
     "cart_price_font": "secondary",
+    "auto_open_cart_drawer": true,
     "enable_free_shipping_bar": true,
     "free_shipping_threshold": 150,
     "show_cart_note": false,

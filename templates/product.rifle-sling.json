@@ -408,6 +408,7 @@
               "type": "linked-product-card",
               "name": "Linked Product Card",
               "settings": {
+                "heading": "Hardware Options",
                 "button_label": "ADD +",
                 "product_1": "utg®-qd-sling-swivel-1-loop",
                 "product_2": "sling-swivel-1-38-push-button-quick-detach",

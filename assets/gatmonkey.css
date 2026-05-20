@@ -189,7 +189,7 @@ h5, h6, p {
 
 .skre-promo-card__heading {
   font-family: var(--font-heading--family);
-  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-size: clamp(1.35rem, 2vw, 1.6rem);
   font-weight: 700;
   line-height: 1.2;
   margin: 0;

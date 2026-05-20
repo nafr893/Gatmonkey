@@ -170,15 +170,33 @@
   }
 
   function cartChange(variantId, quantity) {
+    // Use line-item key format (variantId + colon) so Shopify matches correctly for items without properties
     return fetch('/cart/change.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-      body: JSON.stringify({ id: Number(variantId), quantity }),
+      body: JSON.stringify({ id: variantId + ':', quantity }),
     })
-      .then((r) => { if (!r.ok) throw new Error('change-failed'); return r.json(); });
+      .then((r) => r.json())
+      .then((cart) => {
+        // Fallback: if the colon-key didn't find the item, try plain variant ID
+        const stillPresent = cart.items?.some((i) => String(i.variant_id) === String(variantId));
+        if (quantity === 0 && stillPresent) {
+          return fetch('/cart/change.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ id: Number(variantId), quantity: 0 }),
+          }).then((r) => r.json());
+        }
+        return cart;
+      });
   }
 
   function notifyCart(cart) {
+    // Suppress cart drawer auto-open — dispatch the event without triggering it to slide open
+    const drawer = document.querySelector('cart-drawer-component');
+    const hadAutoOpen = drawer?.hasAttribute('auto-open');
+    if (hadAutoOpen) drawer.removeAttribute('auto-open');
+
     document.dispatchEvent(
       Object.assign(new Event('cart:update', { bubbles: true }), {
         detail: {
@@ -188,6 +206,9 @@
         },
       })
     );
+
+    // Restore immediately — dispatchEvent is synchronous so handlers have already run
+    if (hadAutoOpen) drawer.setAttribute('auto-open', '');
   }
 
   if (document.readyState === 'loading') {

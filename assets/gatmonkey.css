@@ -7,12 +7,17 @@ h1, h2, h3, h4 {
 font-family: 'Abel Pro', sans-serif !important;
 }
 
-/* Header / announcement-bar divider: 0.5px at 50% opacity */
+/* Header / announcement-bar dividers: 0.5px at 50% opacity */
 .header__row--top,
 .header__row--bottom {
   --border-bottom-width: 0.5px !important;
   --border-bottom-width-mobile: 0.5px !important;
   border-bottom-color: rgb(var(--color-border-rgb) / 0.5) !important;
+}
+
+.announcement-bar {
+  --border-bottom-width: 0.5px !important;
+  border-block-end-color: rgb(var(--color-border-rgb) / 0.5) !important;
 }
 
 /* Button blocks: double horizontal padding + bold label */

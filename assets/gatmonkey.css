@@ -208,12 +208,6 @@ h5, h6, p {
   outline: none;
 }
 
-/* Hide the theme's native mobile filter toggle — handled by skre-sort-toolbar */
-@media screen and (max-width: 749px) {
-  .facets-toggle {
-    display: none !important;
-  }
-}
 
 @media screen and (min-width: 750px) {
   .menu-list__link {

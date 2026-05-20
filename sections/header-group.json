@@ -149,7 +149,7 @@
         "enable_sticky_header": "always",
         "divider_width": 0,
         "divider_size": "page-width",
-        "border_width": 0,
+        "border_width": 0.5,
         "actions_display_style": "icon",
         "actions_font_size": "0.875rem",
         "actions_font": "body",

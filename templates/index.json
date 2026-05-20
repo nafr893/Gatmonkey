@@ -397,8 +397,8 @@
               "settings": {
                 "image_ratio": "square",
                 "toggle_overlay": true,
-                "overlay_color": "#00000026",
-                "overlay_style": "gradient",
+                "overlay_color": "#00000045",
+                "overlay_style": "solid",
                 "gradient_direction": "to top",
                 "border": "none",
                 "border_width": 1,

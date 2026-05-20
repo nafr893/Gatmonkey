@@ -1,21 +1,34 @@
 /**
  * Linked Product Card
- * Handles variant selection and add-to-cart for standalone linked product card blocks.
+ * Handles variant selection, add-to-cart, and inline quantity controls.
  */
 
 (function () {
   'use strict';
 
   function init() {
-    document.querySelectorAll('.skre-lpc').forEach(initCard);
+    document.querySelectorAll('.skre-lpc').forEach(initBlock);
   }
 
+  /** @param {HTMLElement} block */
+  function initBlock(block) {
+    block.querySelectorAll('.skre-lpc__card').forEach(initCard);
+  }
+
+  /** @param {HTMLElement} card */
   function initCard(card) {
     const variantBtns = card.querySelectorAll('[data-lpc-variant-btn]');
-    const addBtn = /** @type {HTMLButtonElement|null} */ (card.querySelector('[data-lpc-add-btn]'));
-    const priceEl = card.querySelector('[data-lpc-price]');
-    const selectedLabelSpan = card.querySelector('[data-lpc-selected-label] span');
+    const addBtn      = /** @type {HTMLButtonElement} */ (card.querySelector('[data-lpc-add-btn]'));
+    const qtyRow      = card.querySelector('[data-lpc-qty-row]');
+    const qtyValue    = card.querySelector('[data-lpc-qty-value]');
+    const addedPrice  = card.querySelector('[data-lpc-added-price]');
+    const priceEl     = card.querySelector('[data-lpc-price]');
+    const labelSpan   = card.querySelector('[data-lpc-selected-label] span');
+    const minusBtn    = card.querySelector('[data-lpc-qty-minus]');
+    const plusBtn     = card.querySelector('[data-lpc-qty-plus]');
+    const removeBtn   = card.querySelector('[data-lpc-remove]');
 
+    // ── Variant selection ──────────────────────────────────────────
     variantBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
         variantBtns.forEach((b) => {
@@ -25,63 +38,156 @@
         btn.classList.add('skre-lpc__variant-btn--selected');
         btn.setAttribute('aria-pressed', 'true');
 
-        if (priceEl) priceEl.textContent = btn.dataset.variantPrice || '';
-        if (selectedLabelSpan) selectedLabelSpan.textContent = btn.dataset.variantTitle || '';
-        if (addBtn) addBtn.dataset.selectedVariant = btn.dataset.variantId || '';
+        if (priceEl)    priceEl.firstChild.textContent = btn.dataset.variantPrice || '';
+        if (labelSpan)  labelSpan.textContent = btn.dataset.variantTitle || '';
+        if (addBtn)     addBtn.dataset.selectedVariant = btn.dataset.variantId || '';
+
+        // If item is already in cart (qty row visible), update added price too
+        if (addedPrice) addedPrice.textContent = btn.dataset.variantPrice || '';
       });
     });
 
-    if (addBtn) addBtn.addEventListener('click', () => addToCart(addBtn));
+    // ── ADD + ──────────────────────────────────────────────────────
+    if (addBtn) {
+      addBtn.addEventListener('click', () => {
+        const variantId = addBtn.dataset.selectedVariant;
+        if (!variantId) return;
+
+        addBtn.disabled = true;
+        addBtn.textContent = '...';
+
+        cartAdd(variantId)
+          .then((cart) => {
+            if (qtyValue)   qtyValue.textContent = '1';
+            if (addedPrice) addedPrice.textContent = getPriceLabel(card, variantId);
+            showQtyRow(qtyRow, addBtn);
+            notifyCart(cart);
+          })
+          .catch(() => {
+            addBtn.disabled = false;
+            addBtn.textContent = restoreLabel(card);
+          });
+      });
+    }
+
+    // ── Quantity − ─────────────────────────────────────────────────
+    if (minusBtn) {
+      minusBtn.addEventListener('click', () => {
+        const current = parseInt(qtyValue?.textContent || '1', 10);
+        const next = current - 1;
+        if (next <= 0) {
+          triggerRemove(card, addBtn, qtyRow, qtyValue);
+        } else {
+          updateQty(card, addBtn, qtyValue, next);
+        }
+      });
+    }
+
+    // ── Quantity + ─────────────────────────────────────────────────
+    if (plusBtn) {
+      plusBtn.addEventListener('click', () => {
+        const current = parseInt(qtyValue?.textContent || '1', 10);
+        updateQty(card, addBtn, qtyValue, current + 1);
+      });
+    }
+
+    // ── Remove ─────────────────────────────────────────────────────
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => {
+        triggerRemove(card, addBtn, qtyRow, qtyValue);
+      });
+    }
   }
 
-  /** @param {HTMLButtonElement} btn */
-  function addToCart(btn) {
-    const variantId = btn.dataset.selectedVariant;
+  // ── Helpers ──────────────────────────────────────────────────────
+
+  function showQtyRow(qtyRow, addBtn) {
+    if (qtyRow) {
+      qtyRow.classList.add('skre-lpc__qty-row--visible');
+      qtyRow.setAttribute('aria-hidden', 'false');
+    }
+    if (addBtn) addBtn.style.display = 'none';
+  }
+
+  function hideQtyRow(qtyRow, addBtn) {
+    if (qtyRow) {
+      qtyRow.classList.remove('skre-lpc__qty-row--visible');
+      qtyRow.setAttribute('aria-hidden', 'true');
+    }
+    if (addBtn) {
+      addBtn.style.display = '';
+      addBtn.disabled = false;
+      addBtn.textContent = restoreLabel(addBtn.closest('.skre-lpc'));
+    }
+  }
+
+  /** @param {HTMLElement} card @param {HTMLButtonElement} addBtn @param {Element|null} qtyRow @param {Element|null} qtyValue */
+  function triggerRemove(card, addBtn, qtyRow, qtyValue) {
+    const variantId = addBtn?.dataset.selectedVariant;
     if (!variantId) return;
+    cartChange(variantId, 0).then((cart) => {
+      if (qtyValue) qtyValue.textContent = '1';
+      hideQtyRow(qtyRow, addBtn);
+      notifyCart(cart);
+    });
+  }
 
-    const originalLabel = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = '...';
+  /** @param {HTMLElement} card @param {HTMLButtonElement} addBtn @param {Element|null} qtyValue @param {number} qty */
+  function updateQty(card, addBtn, qtyValue, qty) {
+    const variantId = addBtn?.dataset.selectedVariant;
+    if (!variantId) return;
+    cartChange(variantId, qty).then((cart) => {
+      if (qtyValue) qtyValue.textContent = String(qty);
+      notifyCart(cart);
+    });
+  }
 
-    fetch('/cart/add.js', {
+  /** @param {HTMLElement} card @param {string} variantId */
+  function getPriceLabel(card, variantId) {
+    const btn = card.querySelector(`[data-lpc-variant-btn][data-variant-id="${variantId}"]`);
+    if (btn) return btn.dataset.variantPrice || '';
+    const priceEl = card.querySelector('[data-lpc-price]');
+    return priceEl?.firstChild?.textContent?.trim() || '';
+  }
+
+  /** @param {HTMLElement|null} ctx */
+  function restoreLabel(ctx) {
+    const block = ctx?.closest?.('[data-block-id]') || ctx;
+    return block?.querySelector?.('[data-lpc-add-btn]')?.closest?.('.skre-lpc')
+      ?.querySelector?.('.skre-lpc__add-btn')?.textContent?.trim() || 'Add +';
+  }
+
+  // ── Cart API ─────────────────────────────────────────────────────
+
+  function cartAdd(variantId) {
+    return fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
       body: JSON.stringify({ id: Number(variantId), quantity: 1 }),
     })
-      .then((r) => {
-        if (!r.ok) throw new Error('cart-add-failed');
-        return r.json();
+      .then((r) => { if (!r.ok) throw new Error('add-failed'); return r.json(); })
+      .then(() => fetch('/cart.js').then((r) => r.json()));
+  }
+
+  function cartChange(variantId, quantity) {
+    return fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+      body: JSON.stringify({ id: Number(variantId), quantity }),
+    })
+      .then((r) => { if (!r.ok) throw new Error('change-failed'); return r.json(); });
+  }
+
+  function notifyCart(cart) {
+    document.dispatchEvent(
+      Object.assign(new Event('cart:update', { bubbles: true }), {
+        detail: {
+          resource: cart,
+          sourceId: 'linked-product-card',
+          data: { itemCount: cart.item_count },
+        },
       })
-      .then((item) => {
-        btn.textContent = '✓';
-        // Notify the theme's cart icon / drawer via the standard cart:update event
-        return fetch('/cart.js')
-          .then((r) => r.json())
-          .then((cart) => {
-            document.dispatchEvent(
-              Object.assign(new Event('cart:update', { bubbles: true }), {
-                detail: {
-                  resource: cart,
-                  sourceId: btn.closest('[data-block-id]')?.dataset.blockId || '',
-                  data: {
-                    itemCount: cart.item_count,
-                    variantId: String(variantId),
-                  },
-                },
-              })
-            );
-          });
-      })
-      .then(() => {
-        setTimeout(() => {
-          btn.textContent = originalLabel;
-          btn.disabled = false;
-        }, 1400);
-      })
-      .catch(() => {
-        btn.textContent = originalLabel;
-        btn.disabled = false;
-      });
+    );
   }
 
   if (document.readyState === 'loading') {

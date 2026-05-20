@@ -1,12 +1,17 @@
 {% liquid
   assign s = block.settings
-  assign linked = s.linked_product
+  assign has_any = false
+  for n in (1..6)
+    assign key = 'product_' | append: n
+    if s[key] != blank
+      assign has_any = true
+      break
+    endif
+  endfor
 %}
 
-{% if linked != blank %}
+{% if has_any %}
   <script src="{{ 'linked-product-card.js' | asset_url }}" defer></script>
-
-  {% assign first_variant = linked.selected_or_first_available_variant %}
 
   <div
     class="skre-lpc spacing-style"
@@ -14,62 +19,85 @@
     data-block-id="{{ block.id }}"
     {{ block.shopify_attributes }}
   >
-    <div class="skre-lpc__inner">
+    <div class="skre-lpc__track">
+      {% for n in (1..6) %}
+        {% assign key = 'product_' | append: n %}
+        {% assign linked = s[key] %}
+        {% if linked != blank %}
+          {% assign fv = linked.selected_or_first_available_variant %}
+          <div class="skre-lpc__card">
 
-      {% if linked.featured_image %}
-        <img
-          class="skre-lpc__thumb"
-          src="{{ linked.featured_image | image_url: width: 160 }}"
-          alt="{{ linked.featured_image.alt | default: linked.title | escape }}"
-          width="80"
-          height="80"
-          loading="lazy"
-        >
-      {% endif %}
+            <div class="skre-lpc__card-top">
+              {% if linked.featured_image %}
+                <img
+                  class="skre-lpc__thumb"
+                  src="{{ linked.featured_image | image_url: width: 160 }}"
+                  alt="{{ linked.featured_image.alt | default: linked.title | escape }}"
+                  width="72"
+                  height="72"
+                  loading="lazy"
+                >
+              {% endif %}
 
-      <div class="skre-lpc__info">
-        <p class="skre-lpc__title">{{ linked.title }}</p>
+              <div class="skre-lpc__info">
+                <p class="skre-lpc__title">{{ linked.title }}</p>
 
-        {% unless linked.has_only_default_variant %}
-          <p class="skre-lpc__selected-label" data-lpc-selected-label>
-            {{ linked.options.first }}:&nbsp;<span>{{ first_variant.title }}</span>
-          </p>
-        {% endunless %}
+                {% unless linked.has_only_default_variant %}
+                  <p class="skre-lpc__selected-label" data-lpc-selected-label>
+                    {{ linked.options.first }}:&nbsp;<span>{{ fv.title }}</span>
+                  </p>
+                  <div class="skre-lpc__variants" role="group" aria-label="{{ linked.title }} variants">
+                    {% for variant in linked.variants %}
+                      <button
+                        type="button"
+                        class="skre-lpc__variant-btn{% if forloop.first %} skre-lpc__variant-btn--selected{% endif %}"
+                        data-lpc-variant-btn
+                        data-variant-id="{{ variant.id }}"
+                        data-variant-price="{{ variant.price | money }}"
+                        data-variant-title="{{ variant.title | escape }}"
+                        aria-pressed="{{ forloop.first }}"
+                        {% unless variant.available %}disabled{% endunless %}
+                      >
+                        {{- variant.title -}}
+                      </button>
+                    {% endfor %}
+                  </div>
+                {% endunless %}
 
-        <div class="skre-lpc__variants" role="group" aria-label="{{ linked.title }} variants">
-          {% for variant in linked.variants %}
-            <button
-              type="button"
-              class="skre-lpc__variant-btn{% if forloop.first %} skre-lpc__variant-btn--selected{% endif %}"
-              data-lpc-variant-btn
-              data-variant-id="{{ variant.id }}"
-              data-variant-price="{{ variant.price | money }}"
-              data-variant-title="{{ variant.title | escape }}"
-              aria-pressed="{{ forloop.first }}"
-              {% unless variant.available %}disabled{% endunless %}
-            >
-              {{- variant.title -}}
-            </button>
-          {% endfor %}
-        </div>
+                <p class="skre-lpc__price" data-lpc-price>
+                  {{- fv.price | money -}}
+                  {% if fv.compare_at_price > fv.price %}
+                    &nbsp;<s class="skre-lpc__compare-price">{{ fv.compare_at_price | money }}</s>
+                  {% endif %}
+                </p>
+              </div>
 
-        {% if s.show_description and linked.description != blank %}
-          <p class="skre-lpc__desc">{{ linked.description | strip_html | truncatewords: 20 }}</p>
+              <button
+                type="button"
+                class="skre-lpc__add-btn"
+                data-lpc-add-btn
+                data-selected-variant="{{ fv.id }}"
+                aria-label="Add {{ linked.title | escape }} to cart"
+              >
+                {{- s.button_label | default: 'Add +' -}}
+              </button>
+            </div>
+
+            <div class="skre-lpc__qty-row" data-lpc-qty-row aria-hidden="true">
+              <span class="skre-lpc__added-label">
+                Added &mdash; <strong data-lpc-added-price>{{ fv.price | money }}</strong>
+              </span>
+              <div class="skre-lpc__qty-controls">
+                <button type="button" class="skre-lpc__qty-btn" data-lpc-qty-minus aria-label="Decrease quantity">−</button>
+                <span class="skre-lpc__qty-value" data-lpc-qty-value>1</span>
+                <button type="button" class="skre-lpc__qty-btn" data-lpc-qty-plus aria-label="Increase quantity">+</button>
+                <button type="button" class="skre-lpc__remove-btn" data-lpc-remove>Remove</button>
+              </div>
+            </div>
+
+          </div>
         {% endif %}
-
-        <p class="skre-lpc__price" data-lpc-price>{{ first_variant.price | money }}</p>
-      </div>
-
-      <button
-        type="button"
-        class="skre-lpc__add-btn"
-        data-lpc-add-btn
-        data-selected-variant="{{ first_variant.id }}"
-        aria-label="Add {{ linked.title | escape }} to cart"
-      >
-        {{- s.button_label | default: 'ADD +' -}}
-      </button>
-
+      {% endfor %}
     </div>
   </div>
 {% endif %}
@@ -79,13 +107,47 @@
     width: 100%;
   }
 
-  .skre-lpc__inner {
+  /* ── Track: swipeable on mobile, grid on desktop ── */
+  .skre-lpc__track {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 2px;
+  }
+
+  .skre-lpc__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .skre-lpc__card {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
     border: 1px solid rgb(var(--color-border-rgb) / 0.35);
     border-radius: var(--style-border-radius-cards, 4px);
+    overflow: hidden;
+  }
+
+  @media screen and (min-width: 750px) {
+    .skre-lpc__track {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      overflow-x: visible;
+    }
+
+    .skre-lpc__card {
+      flex: unset;
+    }
+  }
+
+  /* ── Card top row ── */
+  .skre-lpc__card-top {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem;
   }
 
   .skre-lpc__thumb {
@@ -101,7 +163,7 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.25rem;
   }
 
   .skre-lpc__title {
@@ -113,25 +175,24 @@
   .skre-lpc__selected-label {
     margin: 0;
     font-size: var(--font-size--sm);
-    color: var(--color-foreground-muted, var(--color-foreground));
+    opacity: 0.65;
   }
 
   .skre-lpc__variants {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0.15rem;
+    gap: 0.3rem;
   }
 
   .skre-lpc__variant-btn {
     appearance: none;
-    padding: 5px 10px;
+    padding: 3px 8px;
     border: 1px solid var(--color-border);
     border-radius: var(--style-border-radius-pills, 4px);
     background: transparent;
     color: var(--color-foreground);
     font-family: inherit;
-    font-size: var(--font-size--sm);
+    font-size: 0.7rem;
     font-weight: 500;
     cursor: pointer;
     white-space: nowrap;
@@ -149,22 +210,22 @@
     cursor: not-allowed;
   }
 
-  .skre-lpc__desc {
-    margin: 0;
-    font-size: var(--font-size--sm);
-    color: var(--color-foreground-muted, var(--color-foreground));
-  }
-
   .skre-lpc__price {
     margin: 0;
     font-size: var(--font-size--sm);
     font-weight: 700;
   }
 
+  .skre-lpc__compare-price {
+    font-weight: 400;
+    opacity: 0.5;
+  }
+
+  /* ── ADD + button ── */
   .skre-lpc__add-btn {
     flex: 0 0 auto;
     appearance: none;
-    padding: 0.75rem 1rem;
+    padding: 0.65rem 0.9rem;
     border: 2px solid var(--color-foreground);
     border-radius: var(--style-border-radius-buttons, 4px);
     background: transparent;
@@ -172,11 +233,11 @@
     font-family: inherit;
     font-size: var(--font-size--sm);
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     cursor: pointer;
     white-space: nowrap;
-    transition: background-color 0.15s, color 0.15s;
+    transition: background-color 0.15s, color 0.15s, opacity 0.15s;
     align-self: center;
   }
 
@@ -186,14 +247,87 @@
   }
 
   .skre-lpc__add-btn:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 
-  @media screen and (max-width: 749px) {
-    .skre-lpc__add-btn {
-      padding: 0.65rem 0.75rem;
-    }
+  /* ── Quantity row — slides down after adding ── */
+  .skre-lpc__qty-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-inline: 0.85rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease;
+    border-top: 0px solid rgb(var(--color-border-rgb) / 0.25);
+  }
+
+  .skre-lpc__qty-row--visible {
+    max-height: 56px;
+    opacity: 1;
+    padding-block: 0.65rem;
+    border-top-width: 1px;
+  }
+
+  .skre-lpc__added-label {
+    font-size: var(--font-size--sm);
+    white-space: nowrap;
+  }
+
+  .skre-lpc__qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .skre-lpc__qty-btn {
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--color-foreground);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.12s;
+  }
+
+  .skre-lpc__qty-btn:hover {
+    background: rgb(var(--color-foreground-rgb) / 0.08);
+  }
+
+  .skre-lpc__qty-value {
+    font-size: var(--font-size--sm);
+    font-weight: 600;
+    min-width: 1.25rem;
+    text-align: center;
+  }
+
+  .skre-lpc__remove-btn {
+    appearance: none;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--color-foreground);
+    font-family: inherit;
+    font-size: var(--font-size--sm);
+    cursor: pointer;
+    opacity: 0.6;
+    text-decoration: underline;
+    white-space: nowrap;
+  }
+
+  .skre-lpc__remove-btn:hover {
+    opacity: 1;
   }
 {% endstylesheet %}
 
@@ -204,24 +338,67 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Displays a separate product as an add-on card with its own variant picker and Add to Cart button. Inventory is tracked independently."
-    },
-    {
-      "type": "product",
-      "id": "linked_product",
-      "label": "Product"
+      "content": "Displays linked products as add-on cards with independent inventory. On mobile, cards are swipeable. On desktop they show as a grid."
     },
     {
       "type": "text",
       "id": "button_label",
       "label": "Button label",
-      "default": "ADD +"
+      "default": "Add +"
     },
     {
-      "type": "checkbox",
-      "id": "show_description",
-      "label": "Show product description",
-      "default": true
+      "type": "header",
+      "content": "Product 1"
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 2"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 3"
+    },
+    {
+      "type": "product",
+      "id": "product_3",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 4"
+    },
+    {
+      "type": "product",
+      "id": "product_4",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 5"
+    },
+    {
+      "type": "product",
+      "id": "product_5",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Product 6"
+    },
+    {
+      "type": "product",
+      "id": "product_6",
+      "label": "Product"
     },
     {
       "type": "header",

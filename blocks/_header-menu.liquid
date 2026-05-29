@@ -775,7 +775,9 @@
       display: flex;
       flex-direction: row;
       gap: var(--menu-horizontal-gap);
-      flex: calc(1.5 * var(--mega-promo-count, 1)) 1 0;
+      flex-grow: calc(1.5 * var(--mega-promo-count, 1));
+      flex-shrink: 1;
+      flex-basis: 0%;
       min-width: 0;
       margin-inline-end: var(--page-margin);
       align-self: flex-start;

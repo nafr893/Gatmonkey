@@ -31,11 +31,10 @@
       class="svg-wrapper {% if display_style != 'icon' %}desktop:hidden{% endif %}"
       aria-hidden="true"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-cart">
-        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-        <line x1="3" y1="6" x2="21" y2="6"/>
-        <path d="M16 10a4 4 0 01-8 0"/>
-      </svg>
+      <span
+        class="icon-cart"
+        style="display:inline-block;width:22px;height:22px;background-color:currentColor;-webkit-mask-image:url({{ 'icon-cart.svg' | asset_url }});mask-image:url({{ 'icon-cart.svg' | asset_url }});-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;"
+      ></span>
     </span>
 
     {% render 'cart-bubble', limit: 100 %}

@@ -320,6 +320,13 @@ div.collection-card__content.layout-panel-flex--column {
 .add-to-cart-button .add-to-cart-icon {
   display: none !important;
 }
+
+@media screen and (max-width: 749px) {
+  .sticky-add-to-cart__button .add-to-cart-icon {
+    display: flex !important;
+    color: #000 !important;
+  }
+}
 .add-to-cart-button .add-to-cart-text,
 .add-to-cart-button[data-added='true'] .add-to-cart-text {
   animation: none !important;

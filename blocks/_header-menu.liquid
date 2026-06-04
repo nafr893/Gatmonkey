@@ -778,7 +778,8 @@
       flex: 3 1 0;
       min-width: 0;
       margin-inline-end: var(--page-margin);
-      align-self: flex-start;
+      align-self: stretch;
+      margin-block: calc(-1 * var(--submenu-padding-block-start)) calc(-1 * var(--submenu-padding-block-end));
     }
   }
 
@@ -786,7 +787,6 @@
     position: relative;
     flex: 1 1 0;
     min-width: 0;
-    aspect-ratio: 1;
     overflow: hidden;
     border-radius: var(--style-border-radius-cards, 0);
   }

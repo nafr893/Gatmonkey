@@ -128,6 +128,14 @@
         if (labelSpan)  labelSpan.textContent = btn.dataset.variantTitle || '';
         if (addBtn)     addBtn.dataset.selectedVariant = btn.dataset.variantId || '';
 
+        // Update add button availability
+        if (addBtn) {
+          const available = btn.dataset.variantAvailable === 'true';
+          addBtn.disabled = !available;
+          addBtn.textContent = available ? (addBtn.dataset.addLabel || 'Add +') : 'Out of Stock';
+          addBtn.classList.toggle('skre-lpc__add-btn--oos', !available);
+        }
+
         // If item is already in cart (qty row visible), update added price too
         if (addedPrice) addedPrice.textContent = btn.dataset.variantPrice || '';
       });

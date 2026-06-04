@@ -78,6 +78,7 @@
                         data-variant-id="{{ variant.id }}"
                         data-variant-price="{{ variant.price | money }}"
                         data-variant-title="{{ variant.title | escape }}"
+                        data-variant-available="{{ variant.available }}"
                         aria-pressed="{{ forloop.first }}"
                         {% unless variant.available %}disabled{% endunless %}
                       >
@@ -99,12 +100,18 @@
                 <a href="{{ linked.url }}" class="skre-lpc__more-info">More info</a>
                 <button
                   type="button"
-                  class="skre-lpc__add-btn"
+                  class="skre-lpc__add-btn{% unless fv.available %} skre-lpc__add-btn--oos{% endunless %}"
                   data-lpc-add-btn
                   data-selected-variant="{{ fv.id }}"
+                  data-add-label="{{ s.button_label | default: 'Add +' | escape }}"
                   aria-label="Add {{ linked.title | escape }} to cart"
+                  {% unless fv.available %}disabled{% endunless %}
                 >
-                  {{- s.button_label | default: 'Add +' -}}
+                  {%- if fv.available -%}
+                    {{- s.button_label | default: 'Add +' -}}
+                  {%- else -%}
+                    Out of Stock
+                  {%- endif -%}
                 </button>
               </div>
             </div>

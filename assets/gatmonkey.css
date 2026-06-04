@@ -354,6 +354,11 @@ div.collection-card__content.layout-panel-flex--column {
   white-space: nowrap;
 }
 
+/* ── Cart checkout button: bold text ── */
+.cart__checkout-button {
+  font-weight: 800 !important;
+}
+
 /* ── Cart page: hide CTA nav buttons, show standard continue-shopping button ── */
 .cart-page .cart-empty__buttons {
   display: none !important;

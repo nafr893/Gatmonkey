@@ -354,6 +354,14 @@ div.collection-card__content.layout-panel-flex--column {
   white-space: nowrap;
 }
 
+/* ── Cart page: hide CTA nav buttons, show standard continue-shopping button ── */
+.cart-page .cart-empty__buttons {
+  display: none !important;
+}
+.cart-page .cart-items__empty-button {
+  display: inline-flex !important;
+}
+
 /* Search modal + search page bar: input text and placeholder */
 input.search-input,
 input.search-input::placeholder,

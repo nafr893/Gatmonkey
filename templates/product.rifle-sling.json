@@ -381,6 +381,7 @@
             "variant_picker_JFwqDa": {
               "type": "variant-picker",
               "name": "t:names.product_variant_picker",
+              "disabled": true,
               "settings": {
                 "variant_style": "buttons",
                 "show_swatches": true,
@@ -404,6 +405,19 @@
               },
               "blocks": {}
             },
+            "variant_picker_R3rGDr": {
+              "type": "variant-picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": false,
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
             "linked_product_card_x7A8aY": {
               "type": "linked-product-card",
               "name": "Linked Product Card",
@@ -412,7 +426,7 @@
                 "button_label": "ADD +",
                 "product_1": "utg®-qd-sling-swivel-1-loop",
                 "product_2": "sling-swivel-1-38-push-button-quick-detach",
-                "product_3": "",
+                "product_3": "hk-style-sling-snap-hook-blue-force-gear",
                 "product_4": "1in-magnum-swivel-set",
                 "product_5": "",
                 "product_6": "",
@@ -427,19 +441,6 @@
                 "product_15": "",
                 "padding-block-start": 8,
                 "padding-block-end": 8
-              },
-              "blocks": {}
-            },
-            "variant_picker_R3rGDr": {
-              "type": "variant-picker",
-              "settings": {
-                "variant_style": "buttons",
-                "show_swatches": false,
-                "alignment": "left",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
               },
               "blocks": {}
             },
@@ -827,8 +828,8 @@
             "group_icgrde",
             "variant_picker_JFwqDa",
             "divider_VJhene",
-            "linked_product_card_x7A8aY",
             "variant_picker_R3rGDr",
+            "linked_product_card_x7A8aY",
             "buy_buttons_eYQEYi",
             "accordion_p3BQmy",
             "group_Wjw3d9"

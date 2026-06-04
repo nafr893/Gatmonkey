@@ -498,6 +498,7 @@
             </li>
           {%- endfor -%}
         {%- endif -%}
+        {% if skre_vfiles == blank %}
         {% for media in sorted_media %}
           <li
             ref="media[]"
@@ -538,6 +539,7 @@
             {% endif %}
           </li>
         {% endfor %}
+        {% endif %}
       </ul>
       {% if skre_grid_count > 8 %}
         <button class="skre-gallery-toggle" type="button">

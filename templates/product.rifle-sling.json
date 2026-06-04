@@ -381,6 +381,7 @@
             "variant_picker_JFwqDa": {
               "type": "variant-picker",
               "name": "t:names.product_variant_picker",
+              "disabled": true,
               "settings": {
                 "variant_style": "buttons",
                 "show_swatches": true,

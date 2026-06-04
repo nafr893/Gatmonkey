@@ -340,6 +340,7 @@ div.collection-card__content.layout-panel-flex--column {
 /* ── Add-to-cart button: label left, price right; equal padding all sides ── */
 .add-to-cart-button {
   padding-inline: var(--button-padding-block) !important;
+  font-weight: 800 !important;
 }
 
 .add-to-cart-button .add-to-cart-text {

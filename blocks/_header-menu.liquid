@@ -758,6 +758,7 @@
   .menu-list__submenu-inner--has-promo {
     @media screen and (min-width: 990px) {
       gap: var(--menu-horizontal-gap);
+      overflow: hidden;
     }
   }
 
@@ -774,11 +775,11 @@
     @media screen and (min-width: 990px) {
       display: flex;
       flex-direction: row;
-      gap: var(--menu-horizontal-gap);
+      gap: 0;
       flex: 3 1 0;
       min-width: 0;
-      margin-inline-end: var(--page-margin);
       align-self: flex-start;
+      margin-block: calc(-1 * var(--submenu-padding-block-start)) calc(-1 * var(--submenu-padding-block-end));
     }
   }
 

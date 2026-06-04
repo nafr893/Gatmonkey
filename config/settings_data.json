@@ -69,6 +69,7 @@
     "free_shipping_threshold": 150,
     "show_cart_note": false,
     "show_add_discount_code": true,
+    "show_accelerated_checkout_buttons": false,
     "empty_cart_btn_1_text": "Best Sellers",
     "empty_cart_btn_1_url": "shopify://collections/best-sellers",
     "empty_cart_btn_2_text": "New Arrivals",

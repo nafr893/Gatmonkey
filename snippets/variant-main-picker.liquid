@@ -38,10 +38,14 @@
       {%- for product_option in product_resource.options_with_values -%}
         {%- liquid
           assign swatch_count = product_option.values | map: 'swatch' | compact | size
-          assign media_count = product_option.values | map: 'variant' | map: 'featured_media' | compact | size
+          assign option_name_lower = product_option.name | downcase
+          assign is_color_option = false
+          if option_name_lower == 'color' or option_name_lower == 'colour'
+            assign is_color_option = true
+          endif
           assign variant_style = block_settings.variant_style
 
-          if swatch_count > 0 or media_count > 0
+          if swatch_count > 0 or is_color_option
             if block_settings.show_swatches
               if block_settings.variant_style == 'dropdown'
                 assign variant_style = 'swatch_dropdown'
@@ -118,21 +122,69 @@
                   {% endif %}
                 >
                 {% if variant_style == 'swatch' %}
-                  {% liquid
-                    assign featured_media = product_option_value.variant.featured_media
-
-                    # If the variant has no featured media, and we have a combined listing product, then fall back to
-                    # using the featured media of the child product that is linked to this option value.
-                    if featured_media == blank and product_option_value.product_url
-                      assign featured_media = product_option_value.variant.product.featured_media
+                  {%- liquid
+                    assign skre_css_color = ''
+                    if product_option_value.swatch != blank
+                      assign skre_css_color = ''
+                    elsif is_color_option
+                      assign skre_cn = product_option_value.name | downcase | strip
+                      case skre_cn
+                        when 'black'
+                          assign skre_css_color = '#111111'
+                        when 'white'
+                          assign skre_css_color = '#ffffff'
+                        when 'red'
+                          assign skre_css_color = '#cc2200'
+                        when 'blue'
+                          assign skre_css_color = '#2563eb'
+                        when 'royal blue'
+                          assign skre_css_color = '#2052c9'
+                        when 'navy' or 'navy blue'
+                          assign skre_css_color = '#001f5b'
+                        when 'green'
+                          assign skre_css_color = '#16a34a'
+                        when 'olive' or 'odg' or 'olive drab green'
+                          assign skre_css_color = '#6b7355'
+                        when 'purple'
+                          assign skre_css_color = '#7b2d8b'
+                        when 'pink'
+                          assign skre_css_color = '#f472b6'
+                        when 'orange' or 'blaze orange'
+                          assign skre_css_color = '#ff6000'
+                        when 'yellow'
+                          assign skre_css_color = '#facc15'
+                        when 'tan' or 'fde' or 'flat dark earth'
+                          assign skre_css_color = '#c8a97e'
+                        when 'grey' or 'gray'
+                          assign skre_css_color = '#9ca3af'
+                        when 'dark grey' or 'dark gray' or 'charcoal'
+                          assign skre_css_color = '#374151'
+                        when 'brown'
+                          assign skre_css_color = '#78350f'
+                        when 'coyote' or 'coyote brown'
+                          assign skre_css_color = '#81613c'
+                        when 'multicam' or 'camo' or 'camouflage'
+                          assign skre_css_color = '#7a7a52'
+                        else
+                          assign skre_css_color = '#cccccc'
+                      endcase
                     endif
-                  %}
-
-                  {% render 'swatch',
-                    swatch: product_option_value.swatch,
-                    variant_image: featured_media,
-                    mode: 'unscaled'
-                  %}
+                  -%}
+                  {%- if skre_css_color != '' -%}
+                    <span class="swatch swatch--unscaled" aria-hidden="true" style="--swatch-background: {{ skre_css_color }};"></span>
+                  {%- else -%}
+                    {%- liquid
+                      assign featured_media = product_option_value.variant.featured_media
+                      if featured_media == blank and product_option_value.product_url
+                        assign featured_media = product_option_value.variant.product.featured_media
+                      endif
+                    -%}
+                    {% render 'swatch',
+                      swatch: product_option_value.swatch,
+                      variant_image: featured_media,
+                      mode: 'unscaled'
+                    %}
+                  {%- endif -%}
                 {% else %}
                   {% if product_option_value.available == true %}
                     <span

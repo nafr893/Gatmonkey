@@ -128,46 +128,17 @@
                       assign skre_css_color = ''
                     elsif is_color_option
                       assign skre_cn = product_option_value.name | downcase | strip
-                      case skre_cn
-                        when 'black'
-                          assign skre_css_color = '#111111'
-                        when 'white'
-                          assign skre_css_color = '#ffffff'
-                        when 'red'
-                          assign skre_css_color = '#cc2200'
-                        when 'blue'
-                          assign skre_css_color = '#2563eb'
-                        when 'royal blue'
-                          assign skre_css_color = '#2052c9'
-                        when 'navy' or 'navy blue'
-                          assign skre_css_color = '#001f5b'
-                        when 'green'
-                          assign skre_css_color = '#16a34a'
-                        when 'olive' or 'odg' or 'olive drab green'
-                          assign skre_css_color = '#6b7355'
-                        when 'purple'
-                          assign skre_css_color = '#7b2d8b'
-                        when 'pink'
-                          assign skre_css_color = '#f472b6'
-                        when 'orange' or 'blaze orange'
-                          assign skre_css_color = '#ff6000'
-                        when 'yellow'
-                          assign skre_css_color = '#facc15'
-                        when 'tan' or 'fde' or 'flat dark earth'
-                          assign skre_css_color = '#c8a97e'
-                        when 'grey' or 'gray'
-                          assign skre_css_color = '#9ca3af'
-                        when 'dark grey' or 'dark gray' or 'charcoal'
-                          assign skre_css_color = '#374151'
-                        when 'brown'
-                          assign skre_css_color = '#78350f'
-                        when 'coyote' or 'coyote brown'
-                          assign skre_css_color = '#81613c'
-                        when 'multicam' or 'camo' or 'camouflage'
-                          assign skre_css_color = '#7a7a52'
-                        else
-                          assign skre_css_color = '#cccccc'
-                      endcase
+                      assign skre_map_lines = settings.color_swatch_map | newline_to_br | split: '<br />'
+                      for skre_entry in skre_map_lines
+                        assign skre_parts = skre_entry | strip | split: '|'
+                        if skre_parts[0] | downcase | strip == skre_cn
+                          assign skre_css_color = skre_parts[1] | strip
+                          break
+                        endif
+                      endfor
+                      if skre_css_color == ''
+                        assign skre_css_color = '#cccccc'
+                      endif
                     endif
                   -%}
                   {%- if skre_css_color != '' -%}

@@ -38,20 +38,13 @@
       {%- for product_option in product_resource.options_with_values -%}
         {%- liquid
           assign swatch_count = product_option.values | map: 'swatch' | compact | size
-          assign option_name_lower = product_option.name | downcase
-          assign is_color_option = false
-          if option_name_lower == 'color' or option_name_lower == 'colour'
-            assign is_color_option = true
-          endif
           assign variant_style = block_settings.variant_style
 
-          if swatch_count > 0 or is_color_option
-            if block_settings.show_swatches
-              if block_settings.variant_style == 'dropdown'
-                assign variant_style = 'swatch_dropdown'
-              else
-                assign variant_style = 'swatch'
-              endif
+          if swatch_count > 0 and block_settings.show_swatches
+            if block_settings.variant_style == 'dropdown'
+              assign variant_style = 'swatch_dropdown'
+            else
+              assign variant_style = 'swatch'
             endif
           endif
 
@@ -122,40 +115,21 @@
                   {% endif %}
                 >
                 {% if variant_style == 'swatch' %}
-                  {%- liquid
-                    assign skre_css_color = ''
-                    if product_option_value.swatch != blank
-                      assign skre_css_color = ''
-                    elsif is_color_option
-                      assign skre_cn = product_option_value.name | downcase | strip
-                      assign skre_map_lines = settings.color_swatch_map | newline_to_br | split: '<br />'
-                      for skre_entry in skre_map_lines
-                        assign skre_parts = skre_entry | strip | split: '|'
-                        if skre_parts[0] | downcase | strip == skre_cn
-                          assign skre_css_color = skre_parts[1] | strip
-                          break
-                        endif
-                      endfor
-                      if skre_css_color == ''
-                        assign skre_css_color = '#cccccc'
-                      endif
+                  {% liquid
+                    assign featured_media = product_option_value.variant.featured_media
+
+                    # If the variant has no featured media, and we have a combined listing product, then fall back to
+                    # using the featured media of the child product that is linked to this option value.
+                    if featured_media == blank and product_option_value.product_url
+                      assign featured_media = product_option_value.variant.product.featured_media
                     endif
-                  -%}
-                  {%- if skre_css_color != '' -%}
-                    <span class="swatch swatch--unscaled" aria-hidden="true" style="--swatch-background: {{ skre_css_color }};"></span>
-                  {%- else -%}
-                    {%- liquid
-                      assign featured_media = product_option_value.variant.featured_media
-                      if featured_media == blank and product_option_value.product_url
-                        assign featured_media = product_option_value.variant.product.featured_media
-                      endif
-                    -%}
-                    {% render 'swatch',
-                      swatch: product_option_value.swatch,
-                      variant_image: featured_media,
-                      mode: 'unscaled'
-                    %}
-                  {%- endif -%}
+                  %}
+
+                  {% render 'swatch',
+                    swatch: product_option_value.swatch,
+                    variant_image: featured_media,
+                    mode: 'unscaled'
+                  %}
                 {% else %}
                   {% if product_option_value.available == true %}
                     <span

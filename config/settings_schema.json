@@ -2304,17 +2304,6 @@
         "label": "t:settings.border_opacity",
         "default": 10,
         "visible_if": "{{ settings.variant_swatch_border_style != 'none' }}"
-      },
-      {
-        "type": "header",
-        "content": "Color Swatch Map"
-      },
-      {
-        "type": "textarea",
-        "id": "color_swatch_map",
-        "label": "Color name → hex mappings",
-        "info": "One mapping per line in the format: ColorName|#hexcode (e.g. Blaze Orange|#ff6000). Used when Shopify native swatches are not configured.",
-        "default": "Black|#111111\nWhite|#ffffff\nRed|#cc2200\nBlue|#2563eb\nRoyal Blue|#2052c9\nNavy|#001f5b\nGreen|#16a34a\nOlive|#6b7355\nODG|#6b7355\nPurple|#7b2d8b\nPink|#f472b6\nOrange|#ff6000\nBlaze Orange|#ff6000\nYellow|#facc15\nTan|#c8a97e\nFDE|#c8a97e\nGrey|#9ca3af\nGray|#9ca3af\nBrown|#78350f\nCoyote|#81613c"
       }
     ]
   },

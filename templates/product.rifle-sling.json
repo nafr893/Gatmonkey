@@ -405,6 +405,19 @@
               },
               "blocks": {}
             },
+            "variant_picker_R3rGDr": {
+              "type": "variant-picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": false,
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
             "linked_product_card_x7A8aY": {
               "type": "linked-product-card",
               "name": "Linked Product Card",
@@ -428,19 +441,6 @@
                 "product_15": "",
                 "padding-block-start": 8,
                 "padding-block-end": 8
-              },
-              "blocks": {}
-            },
-            "variant_picker_R3rGDr": {
-              "type": "variant-picker",
-              "settings": {
-                "variant_style": "buttons",
-                "show_swatches": false,
-                "alignment": "left",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
               },
               "blocks": {}
             },
@@ -828,8 +828,8 @@
             "group_icgrde",
             "variant_picker_JFwqDa",
             "divider_VJhene",
-            "linked_product_card_x7A8aY",
             "variant_picker_R3rGDr",
+            "linked_product_card_x7A8aY",
             "buy_buttons_eYQEYi",
             "accordion_p3BQmy",
             "group_Wjw3d9"

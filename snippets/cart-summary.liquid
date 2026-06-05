@@ -89,9 +89,13 @@
           %}
         </cart-note>
       {% endif %}
-      {% if settings.show_cart_note and settings.show_add_discount_code %}
+      {% if settings.show_cart_note %}
         <div class="cart-actions__divider"></div>
       {% endif %}
+      <div class="cart-govx-id">
+        <i data-govx-id></i>
+      </div>
+      <div class="cart-actions__divider"></div>
       {% if settings.show_add_discount_code %}
         {% liquid
           assign discount_codes = cart.cart_level_discount_applications | where: 'type', 'discount_code' | map: 'title'

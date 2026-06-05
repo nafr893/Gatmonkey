@@ -67,8 +67,17 @@
     "17806806383eb2828f": {
       "type": "_blocks",
       "blocks": {
+        "custom_liquid_84tjYR": {
+          "type": "custom-liquid",
+          "name": "t:names.custom_liquid",
+          "settings": {
+            "custom_liquid": "<i data-govx-id></i>"
+          },
+          "blocks": {}
+        },
         "govx_id_exclusive_discounts_govx_id_button_VgPjKm": {
           "type": "shopify://apps/govx-id-exclusive-discounts/blocks/govx-id-button/2b41cbab-a2d3-48ab-85b4-09f16dcc4bf0",
+          "disabled": true,
           "settings": {
             "cta_layout": "full",
             "cta_prompt": "Discount available for Military, First Responders, Medical Workers and Teachers"
@@ -76,6 +85,7 @@
         }
       },
       "block_order": [
+        "custom_liquid_84tjYR",
         "govx_id_exclusive_discounts_govx_id_button_VgPjKm"
       ],
       "settings": {

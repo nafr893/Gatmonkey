@@ -697,12 +697,13 @@
           },
           "blocks": {}
         },
-        "contact_form_dUhQbP": {
-          "type": "contact-form",
+        "contact_form_order_y99XgM": {
+          "type": "contact-form-order",
+          "name": "Order Contact Form",
           "settings": {
-            "width": "custom",
-            "custom_width": 50,
-            "width_mobile": "custom",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fit-content",
             "custom_width_mobile": 100,
             "inherit_color_scheme": true,
             "color_scheme": "",
@@ -731,7 +732,7 @@
       },
       "block_order": [
         "text_FPU7fX",
-        "contact_form_dUhQbP"
+        "contact_form_order_y99XgM"
       ],
       "name": "t:names.contact_form",
       "settings": {

@@ -518,10 +518,3 @@ input.search-input::placeholder,
   height: 100%;
 }
 
-/* Cart and search drawer: product image thumbnails match collection page card style */
-.cart-drawer .cart-items__media-container,
-.search-modal .resource-card__media {
-  background-color: red;
-  border-radius: var(--style-border-radius-cards, 4px);
-  overflow: hidden;
-}

@@ -17,7 +17,7 @@
         "announcement_BxgCk9": {
           "type": "_announcement",
           "settings": {
-            "text": "<em>Save Up to 20% On Sling Bundles</em>",
+            "text": "<strong>Bundle & Save on Slings: Buy 2 Save 10%, Buy 3 Save 15%, Buy 4+ Save 20%</strong>",
             "link": "",
             "font": "var(--font-subheading--family)",
             "font_size": "0.75rem",

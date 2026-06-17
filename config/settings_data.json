@@ -139,6 +139,14 @@
         "settings": {
           "allowed_templates": ""
         }
+      },
+      "wholesale_gorilla": {
+        "type": "shopify://apps/wholesale-gorilla/blocks/wsg-header/c48d0487-dff9-41a4-94c8-ec6173fe8b8d",
+        "disabled": false,
+        "settings": {
+          "embed_bg_color": "#000000",
+          "embed_text_color": "#000000"
+        }
       }
     },
     "color_schemes": {

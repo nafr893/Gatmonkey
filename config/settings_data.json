@@ -97,6 +97,57 @@
     "variant_button_border_width": 1,
     "variant_button_radius": 14,
     "variant_button_width": "equal-width-buttons",
+    "sections": {
+      "wsg-custom-fields": {
+        "type": "wsg-custom-fields",
+        "blocks": {
+          "33d01ef9-302a-41da-9e82-aa20956c0c13": {
+            "type": "text_block",
+            "settings": {
+              "text_input": "Website",
+              "isRequired": false
+            }
+          },
+          "ff8cd25a-11e1-4257-baa4-fdf11874553a": {
+            "type": "phone_block",
+            "settings": {
+              "phone_text_input": "Phone Number",
+              "isRequired": false
+            }
+          },
+          "ba10929b-9fff-4f31-8999-ce74f7475e6f": {
+            "type": "text_block",
+            "settings": {
+              "text_input": "Tax ID/ABN/VAT Number",
+              "isRequired": true
+            }
+          },
+          "7e3c653e-b2ef-4189-a5fd-6641fd6563d3": {
+            "type": "textarea_block",
+            "settings": {
+              "textarea_label": "Note",
+              "textarea_placeholder": "Tell us a little about yourself so that we can verify your business identity",
+              "isRequired": false
+            }
+          }
+        },
+        "block_order": [
+          "33d01ef9-302a-41da-9e82-aa20956c0c13",
+          "ff8cd25a-11e1-4257-baa4-fdf11874553a",
+          "ba10929b-9fff-4f31-8999-ce74f7475e6f",
+          "7e3c653e-b2ef-4189-a5fd-6641fd6563d3"
+        ],
+        "settings": {}
+      },
+      "wsg-registration-settings": {
+        "type": "wsg-registration-settings",
+        "settings": {
+          "page-title": "Apply for a Wholesale Account",
+          "description": "<p>Use this form to apply for a wholesale account.</p>",
+          "custom-html": ""
+        }
+      }
+    },
     "content_for_index": [],
     "blocks": {
       "14060646107696862457": {
@@ -422,49 +473,6 @@
           "selected_variant_hover_text_color": "#ffffff",
           "selected_variant_hover_border_color": "#1a1a1a"
         }
-      }
-    },
-    "sections": {
-      "wsg-custom-fields": {
-        "type": "wsg-custom-fields",
-        "blocks": {
-          "33d01ef9-302a-41da-9e82-aa20956c0c13": {
-            "type": "text_block",
-            "settings": {
-              "text_input": "Website",
-              "isRequired": false
-            }
-          },
-          "ff8cd25a-11e1-4257-baa4-fdf11874553a": {
-            "type": "phone_block",
-            "settings": {
-              "phone_text_input": "Phone Number",
-              "isRequired": false
-            }
-          },
-          "ba10929b-9fff-4f31-8999-ce74f7475e6f": {
-            "type": "text_block",
-            "settings": {
-              "text_input": "Tax ID/ABN/VAT Number",
-              "isRequired": false
-            }
-          },
-          "7e3c653e-b2ef-4189-a5fd-6641fd6563d3": {
-            "type": "textarea_block",
-            "settings": {
-              "textarea_label": "Note",
-              "textarea_placeholder": "Tell us a little about yourself so that we can verify your business identity",
-              "isRequired": false
-            }
-          }
-        },
-        "block_order": [
-          "33d01ef9-302a-41da-9e82-aa20956c0c13",
-          "ff8cd25a-11e1-4257-baa4-fdf11874553a",
-          "ba10929b-9fff-4f31-8999-ce74f7475e6f",
-          "7e3c653e-b2ef-4189-a5fd-6641fd6563d3"
-        ],
-        "settings": {}
       }
     }
   },

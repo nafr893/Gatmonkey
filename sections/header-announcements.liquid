@@ -1,5 +1,20 @@
 
 
+{% liquid
+  assign is_wholesale = false
+  if customer
+    for tag in customer.tags
+      assign tag_lower = tag | downcase
+      if tag_lower == 'wholesale' or tag_lower == 'wholesale-only'
+        assign is_wholesale = true
+        break
+      endif
+    endfor
+  endif
+%}
+
+{% unless is_wholesale %}
+
 {% if section.blocks.size > 1 %}
   <script
     src="{{ 'announcement-bar.js' | asset_url }}"
@@ -122,6 +137,8 @@
     inset: 0;
   }
 {% endstylesheet %}
+
+{% endunless %}
 
 {% schema %}
 {

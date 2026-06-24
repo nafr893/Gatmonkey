@@ -122,6 +122,17 @@
               "isRequired": true
             }
           },
+          "upload_file_block_VEBpHJ": {
+            "type": "upload_file_block",
+            "settings": {
+              "upload_file_description": "",
+              "text_input": "Upload Tax-Exempt Form",
+              "button_color": "",
+              "button_border_color": "",
+              "button_text_color": "#000000",
+              "isRequired": true
+            }
+          },
           "7e3c653e-b2ef-4189-a5fd-6641fd6563d3": {
             "type": "textarea_block",
             "settings": {
@@ -135,6 +146,7 @@
           "33d01ef9-302a-41da-9e82-aa20956c0c13",
           "ff8cd25a-11e1-4257-baa4-fdf11874553a",
           "ba10929b-9fff-4f31-8999-ce74f7475e6f",
+          "upload_file_block_VEBpHJ",
           "7e3c653e-b2ef-4189-a5fd-6641fd6563d3"
         ],
         "settings": {}

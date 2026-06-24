@@ -14,13 +14,27 @@
     "header_announcements_9jGBFp": {
       "type": "header-announcements",
       "blocks": {
+        "announcement_MfxqGW": {
+          "type": "_announcement",
+          "name": "t:names.announcement",
+          "settings": {
+            "text": "<strong>Free shipping on orders over $100</strong>",
+            "link": "",
+            "font": "var(--font-subheading--family)",
+            "font_size": "1rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
+        },
         "announcement_BxgCk9": {
           "type": "_announcement",
           "settings": {
-            "text": "<em>Save Up to 20% On Sling Bundles</em>",
+            "text": "<strong>Bundle & Save on Slings: Buy 2 Save 10%, Buy 3 Save 15%, Buy 4+ Save 20%</strong>",
             "link": "",
             "font": "var(--font-subheading--family)",
-            "font_size": "0.75rem",
+            "font_size": "1rem",
             "weight": "",
             "letter_spacing": "normal",
             "case": "none"
@@ -29,6 +43,7 @@
         }
       },
       "block_order": [
+        "announcement_MfxqGW",
         "announcement_BxgCk9"
       ],
       "name": "t:names.announcement_bar",

@@ -487,29 +487,6 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "image_JwGUyf": {
-              "type": "image",
-              "name": "t:names.image",
-              "settings": {
-                "image": "shopify://shop_images/Ammend_2_Logo_White.png",
-                "link": "",
-                "image_ratio": "adapt",
-                "width": "fill",
-                "custom_width": 100,
-                "width_mobile": "custom",
-                "custom_width_mobile": 30,
-                "height": "fit",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
             "group_n8RY8x": {
               "type": "group",
               "name": "t:names.group",
@@ -549,70 +526,18 @@
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
-              "blocks": {
-                "image_hcQcC8": {
-                  "type": "image",
-                  "name": "t:names.image",
-                  "settings": {
-                    "image": "shopify://shop_images/X_Icon_v6.png",
-                    "link": "",
-                    "image_ratio": "adapt",
-                    "width": "fill",
-                    "custom_width": 100,
-                    "width_mobile": "custom",
-                    "custom_width_mobile": 65,
-                    "height": "fit",
-                    "border": "none",
-                    "border_width": 1,
-                    "border_opacity": 100,
-                    "border_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "image_hcQcC8"
-              ]
-            },
-            "image_qjL4ii": {
-              "type": "image",
-              "name": "t:names.image",
-              "settings": {
-                "image": "shopify://shop_images/Gatmonkey_Logo_White.png",
-                "link": "",
-                "image_ratio": "adapt",
-                "width": "fill",
-                "custom_width": 100,
-                "width_mobile": "custom",
-                "custom_width_mobile": 20,
-                "height": "fit",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
               "blocks": {}
             }
           },
           "block_order": [
-            "image_JwGUyf",
-            "group_n8RY8x",
-            "image_qjL4ii"
+            "group_n8RY8x"
           ]
         },
         "text_XAqjqP": {
           "type": "text",
           "name": "t:names.heading",
           "settings": {
-            "text": "<h2>HAWAIIAN WAVE</h2>",
+            "text": "<h2>black flag</h2>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
@@ -665,7 +590,7 @@
           "name": "t:names.button",
           "settings": {
             "label": "Shop now",
-            "link": "shopify://products/pacific-wave",
+            "link": "shopify://products/black-flag-coming-soon",
             "open_in_new_tab": false,
             "style_class": "button",
             "width": "fit-content",
@@ -685,7 +610,7 @@
       "name": "t:names.hero",
       "settings": {
         "media_type_1": "image",
-        "image_1": "shopify://shop_images/Lifetime_Guarantee.webp",
+        "image_1": "shopify://shop_images/DSC_0371.jpg",
         "media_type_2": "image",
         "stack_media_on_mobile": false,
         "custom_mobile_media": false,
@@ -1257,6 +1182,36 @@
         "padding-block-start": 40,
         "padding-block-end": 40
       }
+    },
+    "1781027926f9dbd468": {
+      "type": "_blocks",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
@@ -1265,6 +1220,7 @@
     "collection_list_qQB9iV",
     "hero_aLTJNU",
     "product_list_iW3FUd",
-    "hero_RNhR9Y"
+    "hero_RNhR9Y",
+    "1781027926f9dbd468"
   ]
 }

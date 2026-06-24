@@ -126,8 +126,8 @@
             "type": "upload_file_block",
             "settings": {
               "upload_file_description": "",
-              "text_input": "Upload Tax-Exempt Form",
-              "button_color": "",
+              "text_input": "Upload tax-exempt form here",
+              "button_color": "#FFCC00",
               "button_border_color": "",
               "button_text_color": "#000000",
               "isRequired": true

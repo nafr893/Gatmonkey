@@ -5,7 +5,7 @@
   if customer
     for tag in customer.tags
       assign tag_lower = tag | downcase
-      if tag_lower == 'wholesale' or tag_lower == 'wholesale-only'
+      if tag_lower == 'wholesale' or tag_lower == 'wholesale-only' or tag_lower == 'wg_wholesale'
         assign is_wholesale = true
         break
       endif

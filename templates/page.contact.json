@@ -697,6 +697,32 @@
           },
           "blocks": {}
         },
+        "text_czRYYK": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>Your questions are important to us. Please allow 1-2 business days for a team member to get back you. Thank you for your patience.</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "paragraph",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
         "contact_form_order_y99XgM": {
           "type": "contact-form-order",
           "name": "Order Contact Form",
@@ -732,6 +758,7 @@
       },
       "block_order": [
         "text_FPU7fX",
+        "text_czRYYK",
         "contact_form_order_y99XgM"
       ],
       "name": "t:names.contact_form",

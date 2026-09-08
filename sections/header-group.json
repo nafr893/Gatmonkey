@@ -30,6 +30,7 @@
         },
         "announcement_BxgCk9": {
           "type": "_announcement",
+          "disabled": true,
           "settings": {
             "text": "<strong>Bundle & Save on Slings: Buy 2 Save 10%, Buy 3 Save 15%, Buy 4+ Save 20%</strong>",
             "link": "",

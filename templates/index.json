@@ -607,6 +607,7 @@
         "text_aaz8La",
         "button_jbfbDR"
       ],
+      "disabled": true,
       "name": "t:names.hero",
       "settings": {
         "media_type_1": "image",

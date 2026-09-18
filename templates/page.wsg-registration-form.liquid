@@ -25,6 +25,8 @@ Do not delete unless Wholesale Gorilla has been uninstalled.
   }
 </script>
 
+
+
 <div id="wsg-signup-container" class='wsg-proxy-container'>
   <!-- REGISTRATION SETTINGS -->
   {% section 'wsg-registration-settings' %}
@@ -328,6 +330,16 @@ Do not delete unless Wholesale Gorilla has been uninstalled.
     border-radius: 50%;
     animation: button-loading-spinner 1s ease infinite;
   }
+  /* Required field indicator — Premium form */
+  #wsg-signup input:required:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  #wsg-signup textarea:required {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Ctext x='6' y='10' text-anchor='middle' font-size='12' fill='%23666'%3E*%3C/text%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px top 8px;
+    background-size: 12px 12px;
+    padding-right: 28px;
+    box-sizing: border-box;
+  }
 
   @keyframes button-loading-spinner {
     from {
@@ -361,4 +373,78 @@ Do not delete unless Wholesale Gorilla has been uninstalled.
       const wsgLoginUrl = document.getElementById('loginLinkA') 
       wsgLoginUrl.href = `/${cleanMarketDomainPath}/pages/ws-account-login`    
   }
+
+  // Update the NCA login link based on the login redirect setting
+  (function () {
+    function updateWsgLoginRedirectLink(options) {
+      var linkSelector = options && options.linkSelector;
+      var ncaLogin = options && options.ncaLogin;
+      var linkUpdated = false;
+
+      function getLoginRedirect() {
+        return (
+          window.wsgData &&
+          window.wsgData.customer &&
+          window.wsgData.customer.loginRedirect
+        );
+      }
+
+      function updateLoginRedirectLink() {
+        if (linkUpdated) return;
+
+        var loginRedirect = getLoginRedirect();
+
+        if (!linkSelector || !ncaLogin || !loginRedirect || !loginRedirect.enabled) {
+          return;
+        }
+
+        var installStatus = window.wsgData && window.wsgData.installStatus;
+        var planType =
+          window.wsgData && window.wsgData.billing && window.wsgData.billing.planType;
+        // 'essential' is the 2024 Essentials Plan, renamed to "Lite" externally -
+        // mirrors PLAN_TYPES.ESSENTIAL / app.locals.basicTier in setShopPlanToLocals.js.
+        // 'basic'/'legacy' are the older pre-2024 legacy tier and are unrelated.
+        var isLiteTier = planType === 'essential';
+        var readyTI = installStatus === 'complete' && !isLiteTier;
+
+        var themeIntegrationPath = loginRedirect.themeIntegrationPath || '/';
+        var wholesalePortalPath = isLiteTier
+          ? '/a/wsg/wholesale/catalog'
+          : loginRedirect.wholesalePortalPath || '/a/wsg/wholesale/catalog';
+
+        var redirectPath = readyTI ? themeIntegrationPath : wholesalePortalPath;
+        
+        var loginUrl =
+          '/customer_authentication/login?return_to=' +
+          encodeURIComponent(redirectPath);
+
+        var loginLink = document.querySelector(linkSelector);
+
+        if (loginLink) {
+          loginLink.href = loginUrl;
+          linkUpdated = true;
+
+          console.log('WSGMessage: login redirect setting is on. Link updated');
+        } else {
+          console.log(
+            'WSGMessage: login redirect setting is on, but login link is missing'
+          );
+        }
+      }
+
+      if (window.wsgDataReady) {
+        updateLoginRedirectLink();
+        return;
+      }
+
+      document.addEventListener('wsg:data-ready', updateLoginRedirectLink, {
+        once: true
+      });
+  }   
+
+    updateWsgLoginRedirectLink({
+      linkSelector: '#loginLinkA',
+      ncaLogin: {{ ncaLogin | json }}
+    });
+  })();
 </script>
